@@ -229,8 +229,8 @@ func (l *gCurd) loadView(ctx context.Context, in *CurdPreviewInput) (err error) 
 		"importWebApi":     importWebApi,                                                // 导入webApi
 		"apiPrefix":        in.options.ApiPrefix,                                        // api前缀
 		"componentPrefix":  componentPrefix,                                             // vue子组件前缀
-		"importDao":        importDao,                                                   // vue子组件前缀
-		"importEntity":     importEntity,                                                // vue子组件前缀
+		"importDao":        importDao,                                                   // 导入业务Dao
+		"importEntity":     importEntity,                                                // 导入业务Entity
 	})
 
 	in.view = view
