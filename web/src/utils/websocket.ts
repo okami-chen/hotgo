@@ -97,7 +97,6 @@ export default (onMessage: Function) => {
   let lockReconnect = false;
   let timer: ReturnType<typeof setTimeout>;
   const createSocket = () => {
-    console.log('createSocket...');
     try {
       if (useUserStore.token === '') {
         throw new Error('用户未登录，稍后重试...');
@@ -105,7 +104,6 @@ export default (onMessage: Function) => {
       socket = new WebSocket(useUserStore.config?.wsAddr + '?authorization=' + useUserStore.token);
       init();
     } catch (e) {
-      console.log('createSocket err:' + e);
       reconnect();
     }
     if (lockReconnect) {
