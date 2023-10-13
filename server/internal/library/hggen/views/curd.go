@@ -68,6 +68,7 @@ type CurdOptions struct {
 	Menu          *CurdOptionsMenu   `json:"menu"`
 	TemplateGroup string             `json:"templateGroup"`
 	ApiPrefix     string             `json:"apiPrefix"`
+	RouterPrefix  string             `json:"routerPrefix"`
 	Step          *CurdStep          // 转换后的流程控制条件
 	dictMap       g.Map              // 字典选项 -> 字段映射关系
 }
@@ -126,10 +127,14 @@ func (l *gCurd) initInput(ctx context.Context, in *CurdPreviewInput) (err error)
 
 	// api前缀
 	apiPrefix := gstr.LcFirst(in.In.VarName)
+	routerPrefix := "system"
 	if in.Config.Application.Crud.Templates[in.In.GenTemplate].IsAddon {
 		apiPrefix = in.In.AddonName + "/" + apiPrefix
+		routerPrefix = "addons"
 	}
+
 	in.options.ApiPrefix = apiPrefix
+	in.options.RouterPrefix = routerPrefix
 
 	if err = checkCurdPath(in.Config.Application.Crud.Templates[in.In.GenTemplate], in.In.AddonName); err != nil {
 		return
@@ -228,6 +233,7 @@ func (l *gCurd) loadView(ctx context.Context, in *CurdPreviewInput) (err error) 
 		"importService":    importService,                                               // 导入业务服务
 		"importWebApi":     importWebApi,                                                // 导入webApi
 		"apiPrefix":        in.options.ApiPrefix,                                        // api前缀
+		"routerPrefix":     in.options.RouterPrefix,                                     // 路由前缀
 		"componentPrefix":  componentPrefix,                                             // vue子组件前缀
 		"importDao":        importDao,                                                   // 导入业务Dao
 		"importEntity":     importEntity,                                                // 导入业务Entity
@@ -362,6 +368,10 @@ func (l *gCurd) DoPreview(ctx context.Context, in *CurdPreviewInput) (res *sysin
 	}
 
 	if err = l.generateSqlContent(ctx, in); err != nil {
+		return nil, err
+	}
+
+	if err = l.generateSqlUnInstall(ctx, in); err != nil {
 		return nil, err
 	}
 
@@ -681,8 +691,53 @@ func (l *gCurd) generateSqlContent(ctx context.Context, in *CurdPreviewInput) (e
 	if in.options.Menu.Pid > 0 {
 		tplData["mainComponent"] = "ParentLayout"
 	}
+	if in.Config.Application.Crud.Templates[in.In.GenTemplate].IsAddon {
+		genFile.Path = file.MergeAbs("./addons/"+in.In.AddonName+"/sql", convert.CamelCaseToUnderline(in.In.VarName)+"_menu.sql")
+	} else {
+		genFile.Path = file.MergeAbs(in.Config.Application.Crud.Templates[in.In.GenTemplate].SqlPath, convert.CamelCaseToUnderline(in.In.VarName)+"_menu.sql")
+	}
+	genFile.Meth = consts.GenCodesBuildMethCreate
+	if gfile.Exists(genFile.Path) {
+		genFile.Meth = consts.GenCodesBuildMethSkip
+	}
+	genFile.Required = true
 
-	genFile.Path = file.MergeAbs(in.Config.Application.Crud.Templates[in.In.GenTemplate].SqlPath, convert.CamelCaseToUnderline(in.In.VarName)+"_menu.sql")
+	if !in.options.Step.HasMenu {
+		genFile.Meth = consts.GenCodesBuildIgnore
+		genFile.Required = false
+	}
+
+	tplData["generatePath"] = genFile.Path
+	genFile.Content, err = in.view.Parse(ctx, name+".template", tplData)
+	if err != nil {
+		return err
+	}
+
+	in.content.Views[name] = genFile
+	return
+}
+
+func (l *gCurd) generateSqlUnInstall(ctx context.Context, in *CurdPreviewInput) (err error) {
+	var (
+		name    = "uninstall.sql"
+		config  = g.DB("default").GetConfig()
+		tplData = g.Map{
+			"dbName":        config.Name,
+			"menuTable":     config.Prefix + "admin_menu",
+			"mainComponent": "LAYOUT",
+		}
+		genFile = new(sysin.GenFile)
+	)
+
+	if in.options.Menu.Pid > 0 {
+		tplData["mainComponent"] = "ParentLayout"
+	}
+
+	if in.Config.Application.Crud.Templates[in.In.GenTemplate].IsAddon {
+		genFile.Path = file.MergeAbs("./addons/"+in.In.AddonName+"/sql", "uninstall.sql")
+	} else {
+		genFile.Path = file.MergeAbs(in.Config.Application.Crud.Templates[in.In.GenTemplate].SqlPath, convert.CamelCaseToUnderline(in.In.VarName)+"_menu.sql")
+	}
 	genFile.Meth = consts.GenCodesBuildMethCreate
 	if gfile.Exists(genFile.Path) {
 		genFile.Meth = consts.GenCodesBuildMethSkip

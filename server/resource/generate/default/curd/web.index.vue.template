@@ -36,7 +36,7 @@
             type="primary"
             @click="addTable"
             class="min-left-space"
-            v-if="hasPermission(['/@{.apiPrefix}/edit'])"
+            v-if="hasPermission(['/@{.routerPrefix}/@{.apiPrefix}/edit'])"
           >
             <template #icon>
               <n-icon>
@@ -50,7 +50,7 @@
             @click="handleBatchDelete"
             :disabled="batchDeleteDisabled"
             class="min-left-space"
-            v-if="hasPermission(['/@{.apiPrefix}/delete'])"
+            v-if="hasPermission(['/@{.routerPrefix}/@{.apiPrefix}/delete'])"
           >
             <template #icon>
               <n-icon>
@@ -63,7 +63,7 @@
             type="primary"
             @click="handleExport"
             class="min-left-space"
-            v-if="hasPermission(['/@{.apiPrefix}/delete'])"
+            v-if="hasPermission(['/@{.routerPrefix}/@{.apiPrefix}/delete'])"
           >
             <template #icon>
               <n-icon>
@@ -119,7 +119,7 @@
 @{ if eq .options.Step.HasEdit true }          {
             label: '编辑',
             onClick: handleEdit.bind(null, record),
-            auth: ['/@{.apiPrefix}/edit'],
+            auth: ['/@{.routerPrefix}/@{.apiPrefix}/edit'],
           },@{end}
 @{ if eq .options.Step.HasStatus true }          {
             label: '禁用',
@@ -127,7 +127,7 @@
             ifShow: () => {
               return record.status === 1;
             },
-            auth: ['/@{.apiPrefix}/status'],
+            auth: ['/@{.routerPrefix}/@{.apiPrefix}/status'],
           },
           {
             label: '启用',
@@ -135,19 +135,19 @@
             ifShow: () => {
               return record.status === 0;
             },
-            auth: ['/@{.apiPrefix}/status'],
+            auth: ['/@{.routerPrefix}/@{.apiPrefix}/status'],
           },@{end}
 @{ if eq .options.Step.HasDel true }          {
             label: '删除',
             onClick: handleDelete.bind(null, record),
-            auth: ['/@{.apiPrefix}/delete'],
+            auth: ['/@{.routerPrefix}/@{.apiPrefix}/delete'],
           },@{end}
         ],
 @{ if eq .options.Step.HasView true }        dropDownActions: [
           {
             label: '查看详情',
             key: 'view',
-            auth: ['/@{.apiPrefix}/view'],
+            auth: ['/@{.routerPrefix}/@{.apiPrefix}/view'],
           },
         ],
         select: (key) => {
@@ -188,7 +188,7 @@
   }
 @{ if eq .options.Step.HasView true }
   function handleView(record: Recordable) {
-    router.push({ name: '@{.varName | LcFirst}View', params: { id: record.@{.pk.TsName} } });
+    router.push({ name: '@{.routerPrefix}_@{.varName | LcFirst}_@{.varName | LcFirst}_view', params: { id: record.@{.pk.TsName} } });
   }@{end}
 @{ if eq .options.Step.HasEdit true }
   function handleEdit(record: Recordable) {
