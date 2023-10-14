@@ -23,6 +23,7 @@ func Build(ctx context.Context, sk Skeleton, conf *model.BuildAddonConfig) (err 
 		modulesPath  = "./" + consts.AddonsDir + "/modules/" + sk.Name + ".go"
 		webApiPath   = gstr.Replace(conf.WebApiPath, "{$name}", sk.Name)
 		webViewsPath = gstr.Replace(conf.WebViewsPath, "{$name}", sk.Name)
+		sqlPath      = gstr.Replace(conf.SqlPath, "{$name}", sk.Name)
 		replaces     = map[string]string{
 			"@{.label}":       sk.Label,
 			"@{.name}":        sk.Name,
@@ -35,7 +36,7 @@ func Build(ctx context.Context, sk Skeleton, conf *model.BuildAddonConfig) (err 
 		}
 	)
 
-	if err = checkBuildDir(buildPath, modulesPath, webApiPath, webViewsPath); err != nil {
+	if err = checkBuildDir(buildPath, modulesPath, webApiPath, webViewsPath, sqlPath); err != nil {
 		return
 	}
 

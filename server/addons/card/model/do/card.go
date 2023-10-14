@@ -21,7 +21,7 @@ type Card struct {
 	ExpireAt  *gtime.Time // 过期时间
 	Code      interface{} // 识别码
 	Remark    interface{} // 备注
-	CreatedAt *gtime.Time //
-	UpdatedAt *gtime.Time //
-	DeletedAt *gtime.Time //
+	CreatedAt *gtime.Time // 创建时间
+	UpdatedAt *gtime.Time // 更新时间
+	DeletedAt *gtime.Time // 删除时间
 }

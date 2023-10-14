@@ -19,7 +19,7 @@ type Card struct {
 	ExpireAt  *gtime.Time `json:"expireAt"  description:"过期时间"`
 	Code      string      `json:"code"      description:"识别码"`
 	Remark    string      `json:"remark"    description:"备注"`
-	CreatedAt *gtime.Time `json:"createdAt" description:""`
-	UpdatedAt *gtime.Time `json:"updatedAt" description:""`
-	DeletedAt *gtime.Time `json:"deletedAt" description:""`
+	CreatedAt *gtime.Time `json:"createdAt" description:"创建时间"`
+	UpdatedAt *gtime.Time `json:"updatedAt" description:"更新时间"`
+	DeletedAt *gtime.Time `json:"deletedAt" description:"删除时间"`
 }

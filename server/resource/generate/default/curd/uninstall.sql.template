@@ -14,37 +14,23 @@ START TRANSACTION;
 
 -- --------------------------------------------------------
 -- 菜单目录
-delete from `@{.menuTable}` where `name` = '@{.varName | LcFirst}' and `path` = '/@{.routerPrefix}/@{.varName | LcFirst}';
+delete from `@{.menuTable}` where `name` = '@{.varName | LcFirst}' and `path` = '/@{.routerPrefix}/@{.pluginName | LcFirst}';
 -- 菜单页面
 -- 列表
 delete from `hg_admin_menu` where `permissions` = '/@{.routerPrefix}/@{.apiPrefix}/list';
-@{ if or (eq .options.Step.HasView true) (eq .options.Step.HasEdit true) }
 -- 详情
 delete from `hg_admin_menu` where `permissions` = '/@{.routerPrefix}/@{.apiPrefix}/view';
-@{end}
 -- 菜单按钮
-@{ if eq .options.Step.HasEdit true }
 -- 编辑
 delete from `hg_admin_menu` where `permissions` = '/@{.routerPrefix}/@{.apiPrefix}/edit';
-@{end}
-@{ if and (eq .options.Step.HasEdit true) (eq .options.Step.HasMaxSort true) }
 -- 获取最大排序
 delete from `hg_admin_menu` where `permissions` = '/@{.routerPrefix}/@{.apiPrefix}/maxSort';
-@{end}
-@{ if eq .options.Step.HasDel true }
 -- 删除
 delete from `hg_admin_menu` where `permissions` = '/@{.routerPrefix}/@{.apiPrefix}/delete';
-@{end}
-@{ if eq .options.Step.HasStatus true }
 -- 更新状态
 delete from `hg_admin_menu` where `permissions` = '/@{.routerPrefix}/@{.apiPrefix}/status';
-@{end}
-@{ if eq .options.Step.HasSwitch true }
 -- 操作开关
 delete from `hg_admin_menu` where `permissions` = '/@{.routerPrefix}/@{.apiPrefix}/switch';
-@{end}
-@{ if eq .options.Step.HasExport true }
 -- 导出
 delete from `hg_admin_menu` where `permissions` = '/@{.routerPrefix}/@{.apiPrefix}/export';
-@{end}
 COMMIT;

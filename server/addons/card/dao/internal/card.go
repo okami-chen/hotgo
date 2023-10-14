@@ -29,9 +29,9 @@ type CardColumns struct {
 	ExpireAt  string // 过期时间
 	Code      string // 识别码
 	Remark    string // 备注
-	CreatedAt string //
-	UpdatedAt string //
-	DeletedAt string //
+	CreatedAt string // 创建时间
+	UpdatedAt string // 更新时间
+	DeletedAt string // 删除时间
 }
 
 // cardColumns holds the columns for table sec_card.
