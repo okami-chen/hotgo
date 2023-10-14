@@ -112,9 +112,11 @@ type CardViewModel struct {
 // CardListInp 获取卡片列表
 type CardListInp struct {
 	form.PageReq
-	Id        int64         `json:"id"        dc:"自动编号"`
-	CardNo    string        `json:"card_no"	dc:"卡号"`
-	CreatedAt []*gtime.Time `json:"createdAt" dc:"created_at"`
+	Id        int64         `json:"id"         dc:"自动编号"`
+	CardNo    string        `json:"card_no"    dc:"卡号"`
+	Bank      string        `json:"bank"       dc:"银行"`
+	Organize  string        `json:"organize"   dc:"组织"`
+	CreatedAt []*gtime.Time `json:"createdAt"  dc:"created_at"`
 }
 
 func (in *CardListInp) Filter(ctx context.Context) (err error) {

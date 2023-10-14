@@ -18,6 +18,8 @@ import (
 	"hotgo/addons/@{.name}/router"
 	"hotgo/internal/library/addons"
 	"hotgo/internal/service"
+	"os"
+	"strings"
 	"sync"
 )
 

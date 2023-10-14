@@ -51,6 +51,14 @@ func (s *sSysCard) List(ctx context.Context, in *sysin.CardListInp) (list []*sys
 		mod = mod.WhereLike(dao.Card.Columns().CardNo, "%"+in.CardNo+"%")
 	}
 
+	if in.Organize != "" {
+		mod = mod.Where(dao.Card.Columns().Organize, in.Organize)
+	}
+
+	if in.Bank != "" {
+		mod = mod.Where(dao.Card.Columns().Bank, in.Bank)
+	}
+
 	// 查询created_at
 	if len(in.CreatedAt) == 2 {
 		mod = mod.WhereBetween(dao.Card.Columns().CreatedAt, in.CreatedAt[0], in.CreatedAt[1])
