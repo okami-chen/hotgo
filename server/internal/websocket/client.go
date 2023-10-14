@@ -106,12 +106,12 @@ func (c *Client) write() {
 	for {
 		select {
 		case <-c.closeSignal:
-			g.Log().Infof(mctx, "websocket client quit, user:%+v", c.User)
+			g.Log().Infof(mctx, "websocket client quit, user:%+v", c.User.Id)
 			return
 		case message, ok := <-c.Send:
 			if !ok {
 				// 发送数据错误 关闭连接
-				g.Log().Warningf(mctx, "client write message, user:%+v", c.User)
+				g.Log().Warningf(mctx, "client write message, user:%+v", c.User.Id)
 				return
 			}
 			_ = c.Socket.WriteJSON(message)

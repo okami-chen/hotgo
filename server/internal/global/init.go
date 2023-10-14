@@ -7,13 +7,11 @@ package global
 
 import (
 	"context"
-	"fmt"
 	"github.com/gogf/gf/contrib/trace/jaeger/v2"
 	"github.com/gogf/gf/v2"
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gctx"
-	"github.com/gogf/gf/v2/os/gfile"
 	"github.com/gogf/gf/v2/os/glog"
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/text/gstr"
@@ -24,7 +22,6 @@ import (
 	"hotgo/internal/service"
 	"hotgo/utility/charset"
 	"hotgo/utility/simple"
-	"runtime"
 	"strings"
 )
 
@@ -38,7 +35,7 @@ func Init(ctx context.Context) {
 		return
 	}
 
-	fmt.Printf("欢迎使用HotGo！\r\n当前运行环境：%v, 运行根路径为：%v \r\nHotGo版本：v%v, gf版本：%v \n", runtime.GOOS, gfile.Pwd(), consts.VersionApp, gf.VERSION)
+	g.Log().Debugf(ctx, "应用版本：v%v, 框架版本：%v", consts.VersionApp, gf.VERSION)
 
 	// 初始化链路追踪
 	InitTrace(ctx)

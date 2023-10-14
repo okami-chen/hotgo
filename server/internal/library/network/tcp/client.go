@@ -163,7 +163,7 @@ func (client *Client) dial() *gtcp.Conn {
 			}
 		}
 
-		client.logger.Debugf(client.ctx, "connect to %v error: %v", client.config.Addr, err)
+		//client.logger.Debugf(client.ctx, "connect to %v error: %v", client.config.Addr, err)
 		time.Sleep(client.config.ConnectInterval)
 		continue
 	}

@@ -7,6 +7,8 @@ package @{.name}
 
 import (
 	"context"
+    "github.com/gogf/gf/v2/database/gdb"
+    "github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gctx"
 	_ "hotgo/addons/@{.name}/crons"
@@ -79,7 +81,7 @@ func (m *module) Install(ctx context.Context) (err error) {
 		fileName := "./addons/@{.name}/sql/install.sql"
 		e := m.ImportSql(ctx, fileName)
 		if e != nil {
-			g.Log().Errorf(ctx, "file: %s Not Found", fileName)
+			g.Log().Warningf(ctx, "file: %s Not Found", fileName)
 			return nil
 		}
 		return nil
@@ -93,7 +95,7 @@ func (m *module) Upgrade(ctx context.Context) (err error) {
 		fileName := "./addons/@{.name}/sql/upgrade_" + m.skeleton.Version + ".sql"
 		e := m.ImportSql(ctx, fileName)
 		if e != nil {
-			g.Log().Errorf(ctx, "file: %s Not Found", fileName)
+			g.Log().Warningf(ctx, "file: %s Not Found", fileName)
 			return nil
 		}
 		return nil
@@ -107,8 +109,8 @@ func (m *module) UnInstall(ctx context.Context) (err error) {
 		fileName := "./addons/@{.name}/sql/uninstall.sql"
 		e := m.ImportSql(ctx, fileName)
 		if e != nil {
-			g.Log().Errorf(ctx, "file: %s Not Found", fileName)
-			return e
+			g.Log().Warningf(ctx, "file: %s Not Found", fileName)
+			return nil
 		}
 		return nil
 	})
