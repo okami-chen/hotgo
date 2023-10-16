@@ -1,14 +1,6 @@
-import { h, ref } from 'vue';
-import { NAvatar, NImage, NTag, NSwitch, NRate } from 'naive-ui';
-import { cloneDeep } from 'lodash-es';
-import { FormSchema } from '@/components/Form';
-import { Dicts } from '@/api/dict/dict';
-
-import { isArray, isNullObject } from '@/utils/is';
-import { getFileExt } from '@/utils/urlUtils';
-import { defRangeShortcuts, defShortcuts, formatToDate } from '@/utils/dateUtil';
-import { validate } from '@/utils/validateUtil';
-import { getOptionLabel, getOptionTag, Options, errorImg } from '@/utils/hotgo';
+import {ref} from 'vue';
+import {cloneDeep} from 'lodash-es';
+import {FormSchema} from '@/components/Form';
 
 
 export interface State {
@@ -106,23 +98,23 @@ export const schemas = ref<FormSchema[]>([
 
 export const columns = [
   {
-    title: '自动编号',
+    title: '编号',
     key: 'id',
   },
   {
-    title: '国家缩写',
+    title: '缩写',
     key: 'country',
   },
   {
-    title: '国家名称全程',
+    title: '全称',
     key: 'country_name',
   },
   {
-    title: '国家区号',
+    title: '区号',
     key: 'dialling_code',
   },
   {
-    title: '国旗图片',
+    title: '国旗',
     key: 'img',
   },
 ];
