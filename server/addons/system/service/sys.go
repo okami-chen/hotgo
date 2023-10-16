@@ -59,6 +59,20 @@ type (
 		// Test 测试
 		Test(ctx context.Context, in *sysin.IndexTestInp) (res *sysin.IndexTestModel, err error)
 	}
+	ISysLanguage interface {
+		// Model 语言ORM模型
+		Model(ctx context.Context, option ...*handler.Option) *gdb.Model
+		// List 获取语言列表
+		List(ctx context.Context, in *sysin.LanguageListInp) (list []*sysin.LanguageListModel, totalCount int, err error)
+		// Export 导出语言
+		Export(ctx context.Context, in *sysin.LanguageListInp) (err error)
+		// Edit 修改/新增语言
+		Edit(ctx context.Context, in *sysin.LanguageEditInp) (err error)
+		// Delete 删除语言
+		Delete(ctx context.Context, in *sysin.LanguageDeleteInp) (err error)
+		// View 获取语言指定信息
+		View(ctx context.Context, in *sysin.LanguageViewInp) (res *sysin.LanguageViewModel, err error)
+	}
 )
 
 var (
@@ -66,7 +80,19 @@ var (
 	localSysCurrency ISysCurrency
 	localSysEvent    ISysEvent
 	localSysIndex    ISysIndex
+	localSysLanguage ISysLanguage
 )
+
+func SysConfig() ISysConfig {
+	if localSysConfig == nil {
+		panic("implement not found for interface ISysConfig, forgot register?")
+	}
+	return localSysConfig
+}
+
+func RegisterSysConfig(i ISysConfig) {
+	localSysConfig = i
+}
 
 func SysCurrency() ISysCurrency {
 	if localSysCurrency == nil {
@@ -101,13 +127,13 @@ func RegisterSysIndex(i ISysIndex) {
 	localSysIndex = i
 }
 
-func SysConfig() ISysConfig {
-	if localSysConfig == nil {
-		panic("implement not found for interface ISysConfig, forgot register?")
+func SysLanguage() ISysLanguage {
+	if localSysLanguage == nil {
+		panic("implement not found for interface ISysLanguage, forgot register?")
 	}
-	return localSysConfig
+	return localSysLanguage
 }
 
-func RegisterSysConfig(i ISysConfig) {
-	localSysConfig = i
+func RegisterSysLanguage(i ISysLanguage) {
+	localSysLanguage = i
 }

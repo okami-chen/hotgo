@@ -157,6 +157,10 @@ export const columns = [
         title: '汇率',
         key: 'rate',
     },
+    {
+        title: '更新时间',
+        key: 'updated_at',
+    },
 ];
 
 async function loadOptions() {

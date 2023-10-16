@@ -111,12 +111,14 @@ func (in *CurrencyListInp) Filter(ctx context.Context) (err error) {
 }
 
 type CurrencyListModel struct {
-	Id     int64   `json:"id"     dc:"自动编号"`
-	Status int     `json:"status" dc:"状态"`
-	Code   string  `json:"code"   dc:"代码"`
-	Name   string  `json:"name"   dc:"名称"`
-	Symbol string  `json:"symbol" dc:"符号"`
-	Rate   float64 `json:"rate"   dc:"汇率"`
+	Id        int64       `json:"id"     dc:"自动编号"`
+	Status    int         `json:"status" dc:"状态"`
+	Code      string      `json:"code"   dc:"代码"`
+	Name      string      `json:"name"   dc:"名称"`
+	Symbol    string      `json:"symbol" dc:"符号"`
+	Rate      float64     `json:"rate"   dc:"汇率"`
+	CreatedAt *gtime.Time `json:"created_at"  dc:"创建时间"`
+	UpdatedAt *gtime.Time `json:"updated_at"  dc:"更新时间"`
 }
 
 // CurrencyExportModel 导出货币
