@@ -23,6 +23,22 @@ type (
 		// UpdateConfigByGroup 更新指定分组的配置
 		UpdateConfigByGroup(ctx context.Context, in *sysin.UpdateConfigInp) error
 	}
+	ISysCurrency interface {
+		// Model 货币ORM模型
+		Model(ctx context.Context, option ...*handler.Option) *gdb.Model
+		// List 获取货币列表
+		List(ctx context.Context, in *sysin.CurrencyListInp) (list []*sysin.CurrencyListModel, totalCount int, err error)
+		// Export 导出货币
+		Export(ctx context.Context, in *sysin.CurrencyListInp) (err error)
+		// Edit 修改/新增货币
+		Edit(ctx context.Context, in *sysin.CurrencyEditInp) (err error)
+		// Delete 删除货币
+		Delete(ctx context.Context, in *sysin.CurrencyDeleteInp) (err error)
+		// View 获取货币指定信息
+		View(ctx context.Context, in *sysin.CurrencyViewInp) (res *sysin.CurrencyViewModel, err error)
+		// Status 更新货币状态
+		Status(ctx context.Context, in *sysin.CurrencyStatusInp) (err error)
+	}
 	ISysEvent interface {
 		// Model 事件ORM模型
 		Model(ctx context.Context, option ...*handler.Option) *gdb.Model
@@ -46,20 +62,21 @@ type (
 )
 
 var (
-	localSysEvent  ISysEvent
-	localSysIndex  ISysIndex
-	localSysConfig ISysConfig
+	localSysConfig   ISysConfig
+	localSysCurrency ISysCurrency
+	localSysEvent    ISysEvent
+	localSysIndex    ISysIndex
 )
 
-func SysConfig() ISysConfig {
-	if localSysConfig == nil {
-		panic("implement not found for interface ISysConfig, forgot register?")
+func SysCurrency() ISysCurrency {
+	if localSysCurrency == nil {
+		panic("implement not found for interface ISysCurrency, forgot register?")
 	}
-	return localSysConfig
+	return localSysCurrency
 }
 
-func RegisterSysConfig(i ISysConfig) {
-	localSysConfig = i
+func RegisterSysCurrency(i ISysCurrency) {
+	localSysCurrency = i
 }
 
 func SysEvent() ISysEvent {
@@ -82,4 +99,15 @@ func SysIndex() ISysIndex {
 
 func RegisterSysIndex(i ISysIndex) {
 	localSysIndex = i
+}
+
+func SysConfig() ISysConfig {
+	if localSysConfig == nil {
+		panic("implement not found for interface ISysConfig, forgot register?")
+	}
+	return localSysConfig
+}
+
+func RegisterSysConfig(i ISysConfig) {
+	localSysConfig = i
 }

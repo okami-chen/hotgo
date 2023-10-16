@@ -1,11 +1,12 @@
 <template>
   <div>
     <div class="n-layout-page-header">
-      <n-card :bordered="false" title="证书">
+      <n-card :bordered="false" title="货币">
         <!--  这是由系统生成的CURD表格，你可以将此行注释改为表格的描述 -->
       </n-card>
     </div>
     <n-card :bordered="false" class="proCard">
+
       <BasicForm
           @register="register"
           @submit="reloadTable"
@@ -35,7 +36,7 @@
               type="primary"
               @click="addTable"
               class="min-left-space"
-              v-if="hasPermission(['/addons/cloudflare/ssl/edit'])"
+              v-if="hasPermission(['/addons/system/currency/edit'])"
           >
             <template #icon>
               <n-icon>
@@ -49,7 +50,7 @@
               @click="handleBatchDelete"
               :disabled="batchDeleteDisabled"
               class="min-left-space"
-              v-if="hasPermission(['/addons/cloudflare/ssl/delete'])"
+              v-if="hasPermission(['/addons/system/currency/delete'])"
           >
             <template #icon>
               <n-icon>
@@ -62,7 +63,7 @@
               type="primary"
               @click="handleExport"
               class="min-left-space"
-              v-if="hasPermission(['/addons/cloudflare/ssl/delete'])"
+              v-if="hasPermission(['/addons/system/currency/delete'])"
           >
             <template #icon>
               <n-icon>
@@ -89,7 +90,7 @@ import {useDialog, useMessage} from 'naive-ui';
 import {BasicTable, TableAction} from '@/components/Table';
 import {BasicForm, useForm} from '@/components/Form/index';
 import {usePermission} from '@/hooks/web/usePermission';
-import {Delete, Export, List, Status} from '@/api/addons/cloudflare/ssl';
+import {Delete, Export, List, Status} from '@/api/addons/system/currency';
 import {columns, newState, options, schemas, State} from './model';
 import {DeleteOutlined, ExportOutlined, PlusOutlined} from '@vicons/antd';
 import {useRouter} from 'vue-router';
@@ -119,7 +120,7 @@ const actionColumn = reactive({
         {
           label: '编辑',
           onClick: handleEdit.bind(null, record),
-          auth: ['/addons/cloudflare/ssl/edit'],
+          auth: ['/addons/system/currency/edit'],
         },
         {
           label: '禁用',
@@ -127,7 +128,7 @@ const actionColumn = reactive({
           ifShow: () => {
             return record.status === 1;
           },
-          auth: ['/addons/cloudflare/ssl/status'],
+          auth: ['/addons/system/currency/status'],
         },
         {
           label: '启用',
@@ -135,19 +136,19 @@ const actionColumn = reactive({
           ifShow: () => {
             return record.status === 0;
           },
-          auth: ['/addons/cloudflare/ssl/status'],
+          auth: ['/addons/system/currency/status'],
         },
         {
           label: '删除',
           onClick: handleDelete.bind(null, record),
-          auth: ['/addons/cloudflare/ssl/delete'],
+          auth: ['/addons/system/currency/delete'],
         },
       ],
       dropDownActions: [
         {
           label: '查看详情',
           key: 'view',
-          auth: ['/addons/cloudflare/ssl/view'],
+          auth: ['/addons/system/currency/view'],
         },
       ],
       select: (key) => {
@@ -188,7 +189,7 @@ function reloadTable() {
 }
 
 function handleView(record: Recordable) {
-  router.push({name: 'addons_ssl_ssl_view', params: {id: record.id}});
+  router.push({name: 'addons_system_currency_view', params: {id: record.id}});
 }
 
 function handleEdit(record: Recordable) {
@@ -239,7 +240,7 @@ function handleExport() {
 
 function handleStatus(record: Recordable, status: number) {
   Status({id: record.id, status: status}).then((_res) => {
-    message.success('设为' + getOptionLabel(options.value.sys_normal_disable, status) + '成功');
+    message.success('设为' + getOptionLabel(options.value.yes_or_no, status) + '成功');
     setTimeout(() => {
       reloadTable();
     });

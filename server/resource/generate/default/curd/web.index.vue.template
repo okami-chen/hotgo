@@ -188,7 +188,7 @@
   }
 @{ if eq .options.Step.HasView true }
   function handleView(record: Recordable) {
-    router.push({ name: '@{.routerPrefix}_@{.varName | LcFirst}_@{.varName | LcFirst}_view', params: { id: record.@{.pk.TsName} } });
+    router.push({ name: '@{.routerPrefix}_@{.pluginName | LcFirst}_@{.varName | LcFirst}_view', params: { id: record.@{.pk.TsName} } });
   }@{end}
 @{ if eq .options.Step.HasEdit true }
   function handleEdit(record: Recordable) {
@@ -239,7 +239,7 @@
 
 @{ if eq .options.Step.HasStatus true }  function handleStatus(record: Recordable, status: number) {
     Status({ @{.pk.TsName}: record.@{.pk.TsName}, status: status }).then((_res) => {
-      message.success('设为' + getOptionLabel(options.value.sys_normal_disable, status) + '成功');
+      message.success('设为' + getOptionLabel(options.value.yes_or_no, status) + '成功');
       setTimeout(() => {
         reloadTable();
       });

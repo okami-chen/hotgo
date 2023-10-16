@@ -29,7 +29,7 @@ export const defaultState: State = {
     id: 0,
     account_id: 0,
     domain: '',
-    status: 1,
+    status: '',
     domain_id: '',
     cert_id: '',
     cert_sub_id: '',
