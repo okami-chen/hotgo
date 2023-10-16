@@ -6,6 +6,7 @@
 package hggen
 
 import (
+	"github.com/gogf/gf/v2/text/gstr"
 	_ "hotgo/internal/library/hggen/internal/cmd/gendao"
 	_ "unsafe"
 
@@ -250,6 +251,11 @@ func Build(ctx context.Context, in *sysin.GenCodesBuildInp) (err error) {
 					if genConfig.Application.Crud.Templates[pin.GenTemplate].IsAddon {
 						inp.Path = "./addons/" + pin.AddonName
 						inp.Tables = pin.TableName
+
+						//移除DaoName以外的前缀
+						remove := gstr.Replace(pin.TableName, gstr.ToLower(in.DaoName), "")
+						inp.RemovePrefix = gstr.Replace(in.TableName, remove, "")
+						inp.Prefix = ""
 					}
 					doGenDaoForArray(ctx, -1, inp)
 				}
