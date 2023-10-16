@@ -23,7 +23,7 @@ SET @now := now();
 
 
 -- 菜单目录
-INSERT INTO `@{.menuTable}` (`id`, `pid`, `title`, `name`, `path`, `icon`, `type`, `redirect`, `permissions`, `permission_name`, `component`, `always_show`, `active_menu`, `is_root`, `is_frame`, `frame_src`, `keep_alive`, `hidden`, `affix`, `level`, `tree`, `sort`, `remark`, `status`, `created_at`, `updated_at`) VALUES (NULL, '@{.options.Menu.Pid}', '@{.tableComment}', '@{.routerPrefix}_@{.pluginName | LcFirst}', '/@{.routerPrefix}/@{.pluginName | LcFirst}', '@{.options.Menu.Icon}', '1', '', '/@{.routerPrefix}/@{.pluginName | LcFirst}', '', '@{.mainComponent}', '1', '', '0', '0', '', '0', '0', '0', '1', '', '@{.options.Menu.Sort}', '', '1', @now, @now);
+INSERT INTO `@{.menuTable}` (`id`, `pid`, `title`, `name`, `path`, `icon`, `type`, `redirect`, `permissions`, `permission_name`, `component`, `always_show`, `active_menu`, `is_root`, `is_frame`, `frame_src`, `keep_alive`, `hidden`, `affix`, `level`, `tree`, `sort`, `remark`, `status`, `created_at`, `updated_at`) VALUES (NULL, '@{.options.Menu.Pid}', '@{.tableComment}', '@{.routerPrefix}_@{.pluginName | LcFirst}/@{.varName | LcFirst}', '/@{.routerPrefix}/@{.pluginName | LcFirst}/@{.varName | LcFirst}', '@{.options.Menu.Icon}', '1', '', '/@{.routerPrefix}/@{.pluginName | LcFirst}', '', '@{.mainComponent}', '1', '', '0', '0', '', '0', '0', '0', '1', '', '@{.options.Menu.Sort}', '', '1', @now, @now);
 
 
 SET @dirId = LAST_INSERT_ID();
