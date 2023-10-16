@@ -15,14 +15,6 @@ import (
 )
 
 type (
-	ISysConfig interface {
-		// GetBasic 获取基础配置
-		GetBasic(ctx context.Context) (conf *model.BasicConfig, err error)
-		// GetConfigByGroup 获取指定分组配置
-		GetConfigByGroup(ctx context.Context, in *sysin.GetConfigInp) (res *sysin.GetConfigModel, err error)
-		// UpdateConfigByGroup 更新指定分组的配置
-		UpdateConfigByGroup(ctx context.Context, in *sysin.UpdateConfigInp) error
-	}
 	ISysCurrency interface {
 		// Model 货币ORM模型
 		Model(ctx context.Context, option ...*handler.Option) *gdb.Model
@@ -73,14 +65,37 @@ type (
 		// View 获取语言指定信息
 		View(ctx context.Context, in *sysin.LanguageViewInp) (res *sysin.LanguageViewModel, err error)
 	}
+	ISysConfig interface {
+		// GetBasic 获取基础配置
+		GetBasic(ctx context.Context) (conf *model.BasicConfig, err error)
+		// GetConfigByGroup 获取指定分组配置
+		GetConfigByGroup(ctx context.Context, in *sysin.GetConfigInp) (res *sysin.GetConfigModel, err error)
+		// UpdateConfigByGroup 更新指定分组的配置
+		UpdateConfigByGroup(ctx context.Context, in *sysin.UpdateConfigInp) error
+	}
+	ISysCountry interface {
+		// Model 国家ORM模型
+		Model(ctx context.Context, option ...*handler.Option) *gdb.Model
+		// List 获取国家列表
+		List(ctx context.Context, in *sysin.CountryListInp) (list []*sysin.CountryListModel, totalCount int, err error)
+		// Export 导出国家
+		Export(ctx context.Context, in *sysin.CountryListInp) (err error)
+		// Edit 修改/新增国家
+		Edit(ctx context.Context, in *sysin.CountryEditInp) (err error)
+		// Delete 删除国家
+		Delete(ctx context.Context, in *sysin.CountryDeleteInp) (err error)
+		// View 获取国家指定信息
+		View(ctx context.Context, in *sysin.CountryViewInp) (res *sysin.CountryViewModel, err error)
+	}
 )
 
 var (
-	localSysConfig   ISysConfig
+	localSysCountry  ISysCountry
 	localSysCurrency ISysCurrency
 	localSysEvent    ISysEvent
 	localSysIndex    ISysIndex
 	localSysLanguage ISysLanguage
+	localSysConfig   ISysConfig
 )
 
 func SysConfig() ISysConfig {
@@ -92,6 +107,17 @@ func SysConfig() ISysConfig {
 
 func RegisterSysConfig(i ISysConfig) {
 	localSysConfig = i
+}
+
+func SysCountry() ISysCountry {
+	if localSysCountry == nil {
+		panic("implement not found for interface ISysCountry, forgot register?")
+	}
+	return localSysCountry
+}
+
+func RegisterSysCountry(i ISysCountry) {
+	localSysCountry = i
 }
 
 func SysCurrency() ISysCurrency {
