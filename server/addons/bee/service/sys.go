@@ -43,42 +43,11 @@ type (
 		// View 获取站群指定信息
 		View(ctx context.Context, in *sysin.SystemSiteViewInp) (res *sysin.SystemSiteViewModel, err error)
 	}
-	ISysUser interface {
-		// Model 用户信息ORM模型
-		Model(ctx context.Context, option ...*handler.Option) *gdb.Model
-		// List 获取用户信息列表
-		List(ctx context.Context, in *sysin.UserListInp) (list []*sysin.UserListModel, totalCount int, err error)
-		// Export 导出用户信息
-		Export(ctx context.Context, in *sysin.UserListInp) (err error)
-		// Edit 修改/新增用户信息
-		Edit(ctx context.Context, in *sysin.UserEditInp) (err error)
-		// Delete 删除用户信息
-		Delete(ctx context.Context, in *sysin.UserDeleteInp) (err error)
-		// View 获取用户信息指定信息
-		View(ctx context.Context, in *sysin.UserViewInp) (res *sysin.UserViewModel, err error)
-		// Status 更新用户信息状态
-		Status(ctx context.Context, in *sysin.UserStatusInp) (err error)
-	}
-	ISysUserInfo interface {
-		// Model 客户信息扩展ORM模型
-		Model(ctx context.Context, option ...*handler.Option) *gdb.Model
-		// List 获取客户信息扩展列表
-		List(ctx context.Context, in *sysin.UserInfoListInp) (list []*sysin.UserInfoListModel, totalCount int, err error)
-		// Export 导出客户信息扩展
-		Export(ctx context.Context, in *sysin.UserInfoListInp) (err error)
-		// Edit 修改/新增客户信息扩展
-		Edit(ctx context.Context, in *sysin.UserInfoEditInp) (err error)
-		// Delete 删除客户信息扩展
-		Delete(ctx context.Context, in *sysin.UserInfoDeleteInp) (err error)
-		// View 获取客户信息扩展指定信息
-		View(ctx context.Context, in *sysin.UserInfoViewInp) (res *sysin.UserInfoViewModel, err error)
-	}
+
 )
 
 var (
 	localSystemSite  ISystemSite
-	localSysUser     ISysUser
-	localSysUserInfo ISysUserInfo
 	localSysConfig   ISysConfig
 	localSysIndex    ISysIndex
 )
@@ -116,24 +85,3 @@ func RegisterSystemSite(i ISystemSite) {
 	localSystemSite = i
 }
 
-func SysUser() ISysUser {
-	if localSysUser == nil {
-		panic("implement not found for interface ISysUser, forgot register?")
-	}
-	return localSysUser
-}
-
-func RegisterSysUser(i ISysUser) {
-	localSysUser = i
-}
-
-func SysUserInfo() ISysUserInfo {
-	if localSysUserInfo == nil {
-		panic("implement not found for interface ISysUserInfo, forgot register?")
-	}
-	return localSysUserInfo
-}
-
-func RegisterSysUserInfo(i ISysUserInfo) {
-	localSysUserInfo = i
-}
