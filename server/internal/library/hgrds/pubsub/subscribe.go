@@ -11,8 +11,10 @@ import (
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gctx"
+	"github.com/gogf/gf/v2/os/glog"
 	"hotgo/utility/simple"
 	"sync"
+	"time"
 )
 
 type SubHandler func(ctx context.Context, message *gredis.Message)
@@ -50,7 +52,7 @@ func Subscribe(channel string, hr SubHandler) (err error) {
 		return
 	}
 	subscribes.List[channel] = hr
-	go doSubscribe(channel, hr)
+	go doSubscribeRetry(channel, hr)
 	return
 }
 
@@ -70,6 +72,36 @@ func doSubscribe(channel string, hr SubHandler) {
 			return
 		}
 		handleMessage(hr, msg)
+	}
+}
+
+func doSubscribeRetry(channel string, hr SubHandler) {
+	for {
+		ctx := gctx.New()
+		conn, err := g.Redis().Conn(ctx)
+		if err != nil {
+			g.Log().Errorf(ctx, "Error connecting to Redis: %v", err)
+			time.Sleep(time.Second * 5) // 等待5秒后重试
+			continue
+		}
+
+		defer conn.Close(ctx)
+
+		_, err = conn.Subscribe(ctx, channel)
+		if err != nil {
+			g.Log().Errorf(ctx, "Error subscribing to channel: %v", err)
+			time.Sleep(time.Second * 5) // 等待5秒后重试
+			continue
+		}
+
+		for {
+			msg, err := conn.ReceiveMessage(ctx)
+			if err != nil {
+				glog.Errorf(ctx, "subscribe quit, err:%v", err)
+				break
+			}
+			handleMessage(hr, msg)
+		}
 	}
 }
 

@@ -46,7 +46,6 @@ func (c *CCurrency) Execute(ctx context.Context) {
 		cron.Logger().Errorf(ctx, "Error decoding response: %v", err.Error())
 		return
 	}
-	g.Dump(exchangeRates)
 
 	for code, rate := range exchangeRates.Rates {
 		_, e := dao.Currency.Ctx(ctx).Where("code = ?", code).Update(g.Map{"rate": rate})
