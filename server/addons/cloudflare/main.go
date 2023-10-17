@@ -7,8 +7,8 @@ package cloudflare
 
 import (
 	"context"
-    "github.com/gogf/gf/v2/database/gdb"
-    "github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/database/gdb"
+	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gctx"
 	_ "hotgo/addons/cloudflare/crons"
@@ -42,7 +42,7 @@ func newModule() {
 			Logo:        "",
 			Brief:       `cloudflare`,
 			Description: `cloudflare`,
-			Author:      `system`,
+			Author:      `陈德华`,
 			Version:     `v1.0.0`, // 当该版本号高于已安装的版本号时，会提示可以更新
 		},
 		ctx: gctx.New(),

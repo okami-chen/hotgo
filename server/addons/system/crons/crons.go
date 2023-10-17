@@ -64,14 +64,12 @@ func (c *CLogClean) Clean(ctx context.Context, dirPath string) {
 
 		// 比较日期，如果文件日期早于今天，则删除文件
 		if fileDate < today {
-			err := gfile.Remove(gfile.Join(dirPath, file))
+			err := gfile.Remove(file)
 			if err != nil {
-				cron.Logger().Infof(ctx, "删除失败 :%v", gfile.Join(dirPath, file))
+				cron.Logger().Infof(ctx, "删除失败 :%v", file)
 			} else {
-				cron.Logger().Infof(ctx, "删除成功 :%v", gfile.Join(dirPath, file))
+				cron.Logger().Infof(ctx, "删除成功 :%v", file)
 			}
-		} else {
-			cron.Logger().Infof(ctx, "没有日志 :%v", dirPath)
 		}
 	}
 }

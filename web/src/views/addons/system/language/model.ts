@@ -38,19 +38,19 @@ export const rules = {
         required: true,
         trigger: ['blur', 'input'],
         type: 'string',
-        message: '请输入语言英文',
+        message: '请输入英文',
     },
     language_zh: {
         required: true,
         trigger: ['blur', 'input'],
         type: 'string',
-        message: '请输入语言中文',
+        message: '请输入中文',
     },
     code: {
         required: true,
         trigger: ['blur', 'input'],
         type: 'string',
-        message: '请输入语言简称',
+        message: '请输入简称',
     },
 };
 
@@ -58,9 +58,9 @@ export const schemas = ref<FormSchema[]>([
     {
         field: 'language',
         component: 'NInput',
-        label: '语言英文',
+        label: '英文',
         componentProps: {
-            placeholder: '请输入语言英文',
+            placeholder: '请输入英文',
             onUpdateValue: (e: any) => {
                 console.log(e);
             },
@@ -69,9 +69,9 @@ export const schemas = ref<FormSchema[]>([
     {
         field: 'language_zh',
         component: 'NInput',
-        label: '语言中文',
+        label: '中文',
         componentProps: {
-            placeholder: '请输入语言中文',
+            placeholder: '请输入中文',
             onUpdateValue: (e: any) => {
                 console.log(e);
             },
@@ -80,9 +80,9 @@ export const schemas = ref<FormSchema[]>([
     {
         field: 'code',
         component: 'NInput',
-        label: '语言简称',
+        label: '简称',
         componentProps: {
-            placeholder: '请输入语言简称',
+            placeholder: '请输入简称',
             onUpdateValue: (e: any) => {
                 console.log(e);
             },
@@ -94,18 +94,18 @@ export const columns = [
     {
         title: '自动编号',
         key: 'id',
+        width: 180,
     },
     {
-        title: '语言英文',
+        title: '简称',
+        key: 'code',
+    },
+    {
+        title: '英文',
         key: 'language',
     },
     {
-        title: '语言中文',
+        title: '中文',
         key: 'language_zh',
     },
-    {
-        title: '语言简称',
-        key: 'code',
-    },
-
 ];
