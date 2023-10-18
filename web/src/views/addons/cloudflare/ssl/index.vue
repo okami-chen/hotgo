@@ -188,7 +188,7 @@ function reloadTable() {
 }
 
 function handleView(record: Recordable) {
-  router.push({name: 'addons_ssl_ssl_view', params: {id: record.id}});
+  router.push({name: 'addons_cloudflare_ssl_view', params: {id: record.id}});
 }
 
 function handleEdit(record: Recordable) {

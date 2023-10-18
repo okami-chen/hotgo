@@ -50,7 +50,7 @@ func (s *sSysSsl) List(ctx context.Context, in *sysin.SslListInp) (list []*sysin
 
 	// 查询域名
 	if in.Domain != "" {
-		mod = mod.WhereLike(dao.Ssl.Columns().Domain, in.Domain)
+		mod = mod.WhereLike(dao.Ssl.Columns().Domain, "%"+in.Domain+"%")
 	}
 
 	// 查询状态
