@@ -13,10 +13,10 @@ require (
 	github.com/casbin/casbin/v2 v2.55.0
 	github.com/forgoer/openssl v1.4.0
 	github.com/go-pay/gopay v1.5.91
-	github.com/gogf/gf/contrib/drivers/mysql/v2 v2.5.4
-	github.com/gogf/gf/contrib/nosql/redis/v2 v2.5.4
-	github.com/gogf/gf/contrib/trace/jaeger/v2 v2.5.4
-	github.com/gogf/gf/v2 v2.5.4
+	github.com/gogf/gf/contrib/drivers/mysql/v2 v2.5.5
+	github.com/gogf/gf/contrib/nosql/redis/v2 v2.5.5
+	github.com/gogf/gf/contrib/trace/jaeger/v2 v2.5.5
+	github.com/gogf/gf/v2 v2.5.5
 	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/gorilla/websocket v1.5.0
 	github.com/kayon/iploc v0.0.0-20200312105652-bda3e968a794
@@ -86,7 +86,7 @@ require (
 	github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.19 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
@@ -120,7 +120,7 @@ require (
 	go.uber.org/atomic v1.7.0 // indirect
 	golang.org/x/crypto v0.14.0 // indirect
 	golang.org/x/image v0.1.0 // indirect
-	golang.org/x/net v0.16.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
