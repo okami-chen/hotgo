@@ -42,14 +42,24 @@ func (s *sSysCard) Model(ctx context.Context, option ...*handler.Option) *gdb.Mo
 func (s *sSysCard) List(ctx context.Context, in *sysin.CardListInp) (list []*sysin.CardListModel, totalCount int, err error) {
 	mod := s.Model(ctx)
 
-	// 查询自动编号
-	if in.Id > 0 {
-		mod = mod.Where(dao.Card.Columns().Id, in.Id)
+	// 查询持卡
+	if in.Name != "" {
+		mod = mod.Where(dao.Card.Columns().Name, in.Name)
 	}
 
-	// 查询创建时间
-	if len(in.CreatedAt) == 2 {
-		mod = mod.WhereBetween(dao.Card.Columns().CreatedAt, in.CreatedAt[0], in.CreatedAt[1])
+	// 查询银行
+	if in.Bank != "" {
+		mod = mod.Where(dao.Card.Columns().Bank, in.Bank)
+	}
+
+	// 查询组织
+	if in.Organize != "" {
+		mod = mod.Where(dao.Card.Columns().Organize, in.Organize)
+	}
+
+	// 查询卡号
+	if in.CardNo != "" {
+		mod = mod.WhereLike(dao.Card.Columns().CardNo, in.CardNo)
 	}
 
 	totalCount, err = mod.Clone().Count()

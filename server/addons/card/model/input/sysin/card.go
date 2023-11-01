@@ -8,10 +8,11 @@ package sysin
 
 import (
 	"context"
-	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/os/gtime"
 	"hotgo/addons/card/model/entity"
 	"hotgo/internal/model/input/form"
+
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gtime"
 )
 
 // CardUpdateFields 修改卡片字段过滤
@@ -23,7 +24,6 @@ type CardUpdateFields struct {
 	CardNo   string      `json:"card_no"   dc:"卡号"`
 	ExpireAt *gtime.Time `json:"expire_at" dc:"过期时间"`
 	Code     string      `json:"code"      dc:"识别码"`
-	Remark   string      `json:"remark"    dc:"备注"`
 }
 
 // CardInsertFields 新增卡片字段过滤
@@ -35,7 +35,6 @@ type CardInsertFields struct {
 	CardNo   string      `json:"card_no"   dc:"卡号"`
 	ExpireAt *gtime.Time `json:"expire_at" dc:"过期时间"`
 	Code     string      `json:"code"      dc:"识别码"`
-	Remark   string      `json:"remark"    dc:"备注"`
 }
 
 // CardEditInp 修改/新增卡片
@@ -48,6 +47,9 @@ func (in *CardEditInp) Filter(ctx context.Context) (err error) {
 	if err := g.Validator().Rules("required").Data(in.Name).Messages("持卡不能为空").Run(ctx); err != nil {
 		return err.Current()
 	}
+	if err := g.Validator().Rules("in:陈德华,陈云海,洪婷,袁金波").Data(in.Name).Messages("持卡值不正确").Run(ctx); err != nil {
+		return err.Current()
+	}
 
 	// 验证名称
 	if err := g.Validator().Rules("required").Data(in.Title).Messages("名称不能为空").Run(ctx); err != nil {
@@ -58,9 +60,15 @@ func (in *CardEditInp) Filter(ctx context.Context) (err error) {
 	if err := g.Validator().Rules("required").Data(in.Bank).Messages("银行不能为空").Run(ctx); err != nil {
 		return err.Current()
 	}
+	if err := g.Validator().Rules("in:工行,招行,中行,工行,邮政,浦发").Data(in.Bank).Messages("银行值不正确").Run(ctx); err != nil {
+		return err.Current()
+	}
 
 	// 验证组织
 	if err := g.Validator().Rules("required").Data(in.Organize).Messages("组织不能为空").Run(ctx); err != nil {
+		return err.Current()
+	}
+	if err := g.Validator().Rules("in:银联,万事达,维萨,运通,JCB").Data(in.Organize).Messages("组织值不正确").Run(ctx); err != nil {
 		return err.Current()
 	}
 
@@ -111,8 +119,10 @@ type CardViewModel struct {
 // CardListInp 获取卡片列表
 type CardListInp struct {
 	form.PageReq
-	Id        int64         `json:"id"         dc:"自动编号"`
-	CreatedAt []*gtime.Time `json:"created_at" dc:"创建时间"`
+	Name     string `json:"name"     dc:"持卡"`
+	Bank     string `json:"bank"     dc:"银行"`
+	Organize string `json:"organize" dc:"组织"`
+	CardNo   string `json:"card_no"  dc:"卡号"`
 }
 
 func (in *CardListInp) Filter(ctx context.Context) (err error) {
@@ -120,17 +130,14 @@ func (in *CardListInp) Filter(ctx context.Context) (err error) {
 }
 
 type CardListModel struct {
-	Id        int64       `json:"id"         dc:"自动编号"`
-	Name      string      `json:"name"       dc:"持卡"`
-	Title     string      `json:"title"      dc:"名称"`
-	Bank      string      `json:"bank"       dc:"银行"`
-	Organize  string      `json:"organize"   dc:"组织"`
-	CardNo    string      `json:"card_no"    dc:"卡号"`
-	ExpireAt  *gtime.Time `json:"expire_at"  dc:"过期时间"`
-	Code      string      `json:"code"       dc:"识别码"`
-	Remark    string      `json:"remark"     dc:"备注"`
-	CreatedAt *gtime.Time `json:"created_at" dc:"创建时间"`
-	UpdatedAt *gtime.Time `json:"updated_at" dc:"更新时间"`
+	Id       int64       `json:"id"        dc:"自动编号"`
+	Name     string      `json:"name"      dc:"持卡"`
+	Title    string      `json:"title"     dc:"名称"`
+	Bank     string      `json:"bank"      dc:"银行"`
+	Organize string      `json:"organize"  dc:"组织"`
+	CardNo   string      `json:"card_no"   dc:"卡号"`
+	ExpireAt *gtime.Time `json:"expire_at" dc:"过期时间"`
+	Code     string      `json:"code"      dc:"识别码"`
 }
 
 // CardExportModel 导出卡片
@@ -143,7 +150,6 @@ type CardExportModel struct {
 	CardNo    string      `json:"card_no"    dc:"卡号"`
 	ExpireAt  *gtime.Time `json:"expire_at"  dc:"过期时间"`
 	Code      string      `json:"code"       dc:"识别码"`
-	Remark    string      `json:"remark"     dc:"备注"`
 	CreatedAt *gtime.Time `json:"created_at" dc:"创建时间"`
 	UpdatedAt *gtime.Time `json:"updated_at" dc:"更新时间"`
 }
