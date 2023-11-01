@@ -259,7 +259,7 @@ hggen:
           logicPath : "./internal/logic/sys"                            # 主要业务生成路径
           inputPath: "./internal/model/input/sysin"                     # 表单过滤器生成路径
           routerPath : "./internal/router/genrouter"                    # 生成路由表路径
-          sqlPath : "./storage/data/generate"                           # 生成sql语句路径
+          sqlPath : "./storage/data/generate/sql"                       # 生成sql语句路径
           webApiPath: "../web/src/api"                                  # webApi生成路径
           webViewsPath : "../web/src/views"                             # web页面生成路径
 
@@ -273,7 +273,7 @@ hggen:
           logicPath : "./addons/{$name}/logic/sys"                      # 主要业务生成路径
           inputPath: "./addons/{$name}/model/input/sysin"               # 表单过滤器生成路径
           routerPath : "./addons/{$name}/router/genrouter"              # 生成路由表路径
-          sqlPath : "./storage/data/generate/addons"                    # 生成sql语句路径
+          sqlPath : "./addons/{$name}/sql"                              # 生成sql语句路径
           webApiPath: "../web/src/api/addons/{$name}"                   # webApi生成路径
           webViewsPath : "../web/src/views/addons/{$name}"              # web页面生成路径
 

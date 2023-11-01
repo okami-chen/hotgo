@@ -76,6 +76,7 @@ type BuildAddonConfig struct {
 	SrcPath      string `json:"srcPath"`
 	WebApiPath   string `json:"webApiPath"`
 	WebViewsPath string `json:"webViewsPath"`
+	SqlPath      string `json:"sqlPath"`
 }
 
 // CacheConfig 缓存配置

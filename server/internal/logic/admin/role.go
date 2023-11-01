@@ -57,6 +57,16 @@ func (s *sAdminRole) Verify(ctx context.Context, path, method string) bool {
 		g.Log().Infof(ctx, "admin Verify Enforce err:%+v", err)
 		return false
 	}
+
+	//额外搜索addons
+	if !ok {
+		ok, err = casbin.Enforcer.Enforce(user.RoleKey, "/addons"+path, method)
+		if err != nil {
+			g.Log().Infof(ctx, "admin Verify Enforce err:%+v", err)
+			return false
+		}
+	}
+
 	return ok
 }
 

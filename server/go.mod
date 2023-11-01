@@ -13,10 +13,10 @@ require (
 	github.com/casbin/casbin/v2 v2.55.0
 	github.com/forgoer/openssl v1.4.0
 	github.com/go-pay/gopay v1.5.91
-	github.com/gogf/gf/contrib/drivers/mysql/v2 v2.5.5
-	github.com/gogf/gf/contrib/nosql/redis/v2 v2.5.5
-	github.com/gogf/gf/contrib/trace/jaeger/v2 v2.5.5
-	github.com/gogf/gf/v2 v2.5.5
+	github.com/gogf/gf/contrib/drivers/mysql/v2 v2.5.6
+	github.com/gogf/gf/contrib/nosql/redis/v2 v2.5.6
+	github.com/gogf/gf/contrib/trace/jaeger/v2 v2.5.6
+	github.com/gogf/gf/v2 v2.5.6
 	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/gorilla/websocket v1.5.0
 	github.com/kayon/iploc v0.0.0-20200312105652-bda3e968a794
@@ -60,8 +60,8 @@ require (
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/fatih/color v1.15.0 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
-	github.com/fsnotify/fsnotify v1.6.0 // indirect
-	github.com/go-logr/logr v1.2.4 // indirect
+	github.com/fsnotify/fsnotify v1.7.0 // indirect
+	github.com/go-logr/logr v1.3.0 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/go-redis/redis/v8 v8.11.5 // indirect

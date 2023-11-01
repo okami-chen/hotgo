@@ -7,6 +7,8 @@ package @{.name}
 
 import (
 	"context"
+    "github.com/gogf/gf/v2/database/gdb"
+    "github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gctx"
 	_ "hotgo/addons/@{.name}/crons"
@@ -16,6 +18,8 @@ import (
 	"hotgo/addons/@{.name}/router"
 	"hotgo/internal/library/addons"
 	"hotgo/internal/service"
+	"os"
+	"strings"
 	"sync"
 )
 
@@ -74,18 +78,63 @@ func (m *module) GetSkeleton() *addons.Skeleton {
 
 // Install 安装模块
 func (m *module) Install(ctx context.Context) (err error) {
-	// ...
+
+	g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+		fileName := "./addons/@{.name}/sql/install.sql"
+		e := m.ImportSql(ctx, fileName)
+		if e != nil {
+			g.Log().Warningf(ctx, "file: %s Not Found", fileName)
+			return nil
+		}
+		return nil
+	})
 	return
 }
 
 // Upgrade 更新模块
 func (m *module) Upgrade(ctx context.Context) (err error) {
-	// ...
+	g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+		fileName := "./addons/@{.name}/sql/upgrade_" + m.skeleton.Version + ".sql"
+		e := m.ImportSql(ctx, fileName)
+		if e != nil {
+			g.Log().Warningf(ctx, "file: %s Not Found", fileName)
+			return nil
+		}
+		return nil
+	})
 	return
 }
 
 // UnInstall 卸载模块
 func (m *module) UnInstall(ctx context.Context) (err error) {
-	// ...
+	g.DB().Ctx(ctx).Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+		fileName := "./addons/@{.name}/sql/uninstall.sql"
+		e := m.ImportSql(ctx, fileName)
+		if e != nil {
+			g.Log().Warningf(ctx, "file: %s Not Found", fileName)
+			return nil
+		}
+		return nil
+	})
 	return
+}
+
+func (m *module) ImportSql(ctx context.Context, path string) error {
+	rows, e := os.ReadFile(path)
+	if e != nil {
+		return e
+	}
+	sqlArr := strings.Split(string(rows), "\n")
+	for _, sql := range sqlArr {
+		sql = strings.TrimSpace(sql)
+		if sql == "" || strings.HasPrefix(sql, "--") {
+			continue
+		}
+		exec, err := g.DB().Exec(ctx, sql)
+		g.Log().Infof(ctx, "views.ImportSql sql:%v, exec:%+v, err:%+v", sql, exec, err)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

@@ -6,6 +6,7 @@
 package hggen
 
 import (
+	"github.com/gogf/gf/v2/text/gstr"
 	_ "hotgo/internal/library/hggen/internal/cmd/gendao"
 	_ "unsafe"
 
@@ -224,13 +225,44 @@ func Build(ctx context.Context, in *sysin.GenCodesBuildInp) (err error) {
 	switch in.GenType {
 	case consts.GenCodesTypeCurd:
 		pin := &sysin.GenCodesPreviewInp{SysGenCodes: in.SysGenCodes}
+		daoCfg := GetDaoConfig(in.DbName)
+		daoCfg.Tables = pin.TableName
+		if genConfig.Application.Crud.Templates[pin.GenTemplate].IsAddon {
+			daoCfg.Path = "./addons/" + pin.AddonName
+		}
 		return views.Curd.DoBuild(ctx, &views.CurdBuildInput{
 			PreviewIn: &views.CurdPreviewInput{
 				In:        pin,
-				DaoConfig: GetDaoConfig(in.DbName),
+				DaoConfig: daoCfg,
 				Config:    genConfig,
 			},
-			BeforeEvent: views.CurdBuildEvent{"runDao": Dao},
+			BeforeEvent: views.CurdBuildEvent{"runDao": func(ctx context.Context) (err error) {
+				for _, v := range daoConfig {
+					inp := defaultGenDaoInput
+					err = gconv.Scan(v, &inp)
+					if err != nil {
+						g.Log().Errorf(ctx, "Build Error: %s", err.Error())
+						return
+					}
+					//不是table对应的db_name跳过
+					if pin.DbName != inp.Group {
+						g.Log().Infof(ctx, "DbName[%s] -> Group[%s]", pin.DbName, inp.Group)
+						continue
+					}
+					//如果是插件，dao生成到插件目录
+					if genConfig.Application.Crud.Templates[pin.GenTemplate].IsAddon {
+						inp.Path = "./addons/" + pin.AddonName
+						inp.Tables = pin.TableName
+
+						//移除DaoName以外的前缀
+						inp.Prefix = ""
+						inp.RemovePrefix = gstr.Replace(pin.TableName, gstr.ToLower(in.DaoName), "")
+						inp.JsonCase = "Snake"
+					}
+					doGenDaoForArray(ctx, -1, inp)
+				}
+				return
+			}},
 			AfterEvent: views.CurdBuildEvent{"runService": func(ctx context.Context) (err error) {
 				cfg := GetServiceConfig()
 				if err = ServiceWithCfg(ctx, cfg); err != nil {
