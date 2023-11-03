@@ -2,6 +2,7 @@ import { http, jumpExport } from '@/utils/http/axios';
 
 // 获取租房列表
 export function List(params) {
+  params.pageSize = 15
   return http.request({
     url: '/fang/fang/list',
     method: 'get',
