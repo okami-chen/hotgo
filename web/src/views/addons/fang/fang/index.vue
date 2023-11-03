@@ -127,6 +127,11 @@
             onClick: handleOpen.bind(null, record),
           },
           {
+            label: '编辑',
+            onClick: handleEdit.bind(null, record),
+            auth: ['/addons/fang/fang/edit'],
+          },
+          {
             label: '删除',
             onClick: handleDelete.bind(null, record),
             auth: ['/addons/fang/fang/delete'],

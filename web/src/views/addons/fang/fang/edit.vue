@@ -22,6 +22,10 @@
           <n-input placeholder="请输入编号" v-model:value="params.sid" disabled/>
           </n-form-item>
 
+          <n-form-item label="旗帜" path="flag">
+            <n-select v-model:value="params.flag" :options="options.hefei_zf_flag"/>
+          </n-form-item>
+
           <n-form-item label="小区" path="village">
           <n-input placeholder="请输入小区" v-model:value="params.village" disabled/>
           </n-form-item>
@@ -34,49 +38,45 @@
             <n-input-number placeholder="请输入价格" v-model:value="params.price" disabled/>
           </n-form-item>
 
-          <n-form-item label="户型" path="houseType">
-          <n-input placeholder="请输入户型" v-model:value="params.houseType" />
-          </n-form-item>
+<!--          <n-form-item label="户型" path="houseType">-->
+<!--          <n-input placeholder="请输入户型" v-model:value="params.houseType" disabled/>-->
+<!--          </n-form-item>-->
 
-          <n-form-item label="面积" path="area">
-          <n-input placeholder="请输入面积" v-model:value="params.area" disabled/>
-          </n-form-item>
+<!--          <n-form-item label="面积" path="area">-->
+<!--          <n-input placeholder="请输入面积" v-model:value="params.area" disabled/>-->
+<!--          </n-form-item>-->
 
-          <n-form-item label="朝向" path="toWard">
-          <n-input placeholder="请输入朝向" v-model:value="params.toWard" />
-          </n-form-item>
+<!--          <n-form-item label="朝向" path="toWard">-->
+<!--          <n-input placeholder="请输入朝向" v-model:value="params.toWard" disabled />-->
+<!--          </n-form-item>-->
 
-          <n-form-item label="电梯" path="lift">
-          <n-input placeholder="请输入电梯" v-model:value="params.lift" disabled/>
-          </n-form-item>
+<!--          <n-form-item label="电梯" path="lift">-->
+<!--          <n-input placeholder="请输入电梯" v-model:value="params.lift" disabled/>-->
+<!--          </n-form-item>-->
 
-          <n-form-item label="用水" path="water">
-          <n-input placeholder="请输入用水" v-model:value="params.water" disabled/>
-          </n-form-item>
+<!--          <n-form-item label="用水" path="water">-->
+<!--          <n-input placeholder="请输入用水" v-model:value="params.water" disabled/>-->
+<!--          </n-form-item>-->
 
-          <n-form-item label="用电" path="electricity">
-          <n-input placeholder="请输入用电" v-model:value="params.electricity" disabled/>
-          </n-form-item>
+<!--          <n-form-item label="用电" path="electricity">-->
+<!--          <n-input placeholder="请输入用电" v-model:value="params.electricity" disabled/>-->
+<!--          </n-form-item>-->
 
-          <n-form-item label="租期" path="tenancy">
-          <n-input placeholder="请输入租期" v-model:value="params.tenancy" disabled/>
-          </n-form-item>
+<!--          <n-form-item label="租期" path="tenancy">-->
+<!--          <n-input placeholder="请输入租期" v-model:value="params.tenancy" disabled/>-->
+<!--          </n-form-item>-->
 
-          <n-form-item label="核验" path="verify">
-          <n-input placeholder="请输入核验" v-model:value="params.verify" disabled/>
-          </n-form-item>
+<!--          <n-form-item label="核验" path="verify">-->
+<!--          <n-input placeholder="请输入核验" v-model:value="params.verify" disabled/>-->
+<!--          </n-form-item>-->
 
-          <n-form-item label="入住" path="checkIn">
-          <n-input placeholder="请输入入住" v-model:value="params.checkIn" disabled/>
-          </n-form-item>
+<!--          <n-form-item label="入住" path="checkIn">-->
+<!--          <n-input placeholder="请输入入住" v-model:value="params.checkIn" disabled/>-->
+<!--          </n-form-item>-->
 
-          <n-form-item label="旗帜" path="flag">
-            <n-select v-model:value="params.flag" :options="options.hefei_zf_flag" disabled/>
-          </n-form-item>
-
-          <n-form-item label="网址" path="url">
-          <n-input placeholder="请输入网址" v-model:value="params.url" disabled/>
-          </n-form-item>
+<!--          <n-form-item label="网址" path="url">-->
+<!--          <n-input placeholder="请输入网址" v-model:value="params.url" disabled/>-->
+<!--          </n-form-item>-->
 
 
         </n-form>

@@ -64,38 +64,38 @@ func (in *FangEditInp) Filter(ctx context.Context) (err error) {
 		return err.Current()
 	}
 
-	// 验证小区
-	if err := g.Validator().Rules("required").Data(in.Village).Messages("小区不能为空").Run(ctx); err != nil {
-		return err.Current()
-	}
-
-	// 验证标题
-	if err := g.Validator().Rules("required").Data(in.Title).Messages("标题不能为空").Run(ctx); err != nil {
-		return err.Current()
-	}
-
-	// 验证价格
-	if err := g.Validator().Rules("regex:(^[0-9]{1,10}$)|(^[0-9]{1,10}[\\.]{1}[0-9]{1,2}$)").Data(in.Price).Messages("价格最多允许输入10位整数及2位小数").Run(ctx); err != nil {
-		return err.Current()
-	}
-
-	// 验证户型
-	if err := g.Validator().Rules("required").Data(in.HouseType).Messages("户型不能为空").Run(ctx); err != nil {
-		return err.Current()
-	}
-
-	// 验证朝向
-	if err := g.Validator().Rules("required").Data(in.ToWard).Messages("朝向不能为空").Run(ctx); err != nil {
-		return err.Current()
-	}
-
-	// 验证旗帜
-	if err := g.Validator().Rules("required").Data(in.Flag).Messages("旗帜不能为空").Run(ctx); err != nil {
-		return err.Current()
-	}
-	if err := g.Validator().Rules("in:1").Data(in.Flag).Messages("旗帜值不正确").Run(ctx); err != nil {
-		return err.Current()
-	}
+	//// 验证小区
+	//if err := g.Validator().Rules("required").Data(in.Village).Messages("小区不能为空").Run(ctx); err != nil {
+	//	return err.Current()
+	//}
+	//
+	//// 验证标题
+	//if err := g.Validator().Rules("required").Data(in.Title).Messages("标题不能为空").Run(ctx); err != nil {
+	//	return err.Current()
+	//}
+	//
+	//// 验证价格
+	//if err := g.Validator().Rules("regex:(^[0-9]{1,10}$)|(^[0-9]{1,10}[\\.]{1}[0-9]{1,2}$)").Data(in.Price).Messages("价格最多允许输入10位整数及2位小数").Run(ctx); err != nil {
+	//	return err.Current()
+	//}
+	//
+	//// 验证户型
+	//if err := g.Validator().Rules("required").Data(in.HouseType).Messages("户型不能为空").Run(ctx); err != nil {
+	//	return err.Current()
+	//}
+	//
+	//// 验证朝向
+	//if err := g.Validator().Rules("required").Data(in.ToWard).Messages("朝向不能为空").Run(ctx); err != nil {
+	//	return err.Current()
+	//}
+	//
+	//// 验证旗帜
+	//if err := g.Validator().Rules("required").Data(in.Flag).Messages("旗帜不能为空").Run(ctx); err != nil {
+	//	return err.Current()
+	//}
+	//if err := g.Validator().Rules("in:1").Data(in.Flag).Messages("旗帜值不正确").Run(ctx); err != nil {
+	//	return err.Current()
+	//}
 
 	return
 }

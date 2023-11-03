@@ -92,24 +92,18 @@ export const rules = {
     validator: validate.amount,
     message: '请输入价格',
   },
-  houseType: {
-    required: true,
-    trigger: ['blur', 'input'],
-    type: 'string',
-    message: '请输入户型',
-  },
-  toWard: {
-    required: true,
-    trigger: ['blur', 'input'],
-    type: 'string',
-    message: '请输入朝向',
-  },
-  flag: {
-    required: true,
-    trigger: ['blur', 'input'],
-    type: 'number',
-    message: '请输入旗帜',
-  },
+  // houseType: {
+  //   required: true,
+  //   trigger: ['blur', 'input'],
+  //   type: 'string',
+  //   message: '请输入户型',
+  // },
+  // toWard: {
+  //   required: true,
+  //   trigger: ['blur', 'input'],
+  //   type: 'string',
+  //   message: '请输入朝向',
+  // },
 };
 
 export const schemas = ref<FormSchema[]>([
@@ -170,19 +164,19 @@ export const schemas = ref<FormSchema[]>([
   //     },
   //   },
   // },
-  // {
-  //   field: 'flag',
-  //   component: 'NSelect',
-  //   label: '旗帜',
-  //   defaultValue: null,
-  //   componentProps: {
-  //     placeholder: '请选择旗帜',
-  //     options: [],
-  //     onUpdateValue: (e: any) => {
-  //       console.log(e);
-  //     },
-  //   },
-  // },
+  {
+    field: 'flag',
+    component: 'NSelect',
+    label: '旗帜',
+    defaultValue: null,
+    componentProps: {
+      placeholder: '请选择旗帜',
+      options: [],
+      onUpdateValue: (e: any) => {
+        console.log(e);
+      },
+    },
+  },
 ]);
 
 export const columns = [
@@ -227,28 +221,28 @@ export const columns = [
   //   title: '入住',
   //   key: 'checkIn',
   // },
-  // {
-  //   title: '旗帜',
-  //   key: 'flag',
-  //   render(row) {
-  //     if (isNullObject(row.flag)) {
-  //       return ``;
-  //     }
-  //     return h(
-  //       NTag,
-  //       {
-  //         style: {
-  //           marginRight: '6px',
-  //         },
-  //         type: getOptionTag(options.value.hefei_zf_flag, row.flag),
-  //         bordered: false,
-  //       },
-  //       {
-  //         default: () => getOptionLabel(options.value.hefei_zf_flag, row.flag),
-  //       }
-  //     );
-  //   },
-  // },
+  {
+    title: '旗帜',
+    key: 'flag',
+    render(row) {
+      if (isNullObject(row.flag)) {
+        return ``;
+      }
+      return h(
+        NTag,
+        {
+          style: {
+            marginRight: '6px',
+          },
+          type: getOptionTag(options.value.hefei_zf_flag, row.flag),
+          bordered: false,
+        },
+        {
+          default: () => getOptionLabel(options.value.hefei_zf_flag, row.flag),
+        }
+      );
+    },
+  },
   {
     title: '发布时间',
     key: 'createdAt',
@@ -260,7 +254,7 @@ async function loadOptions() {
   options.value = await Dicts({
     types: [
       'hefei_zf_flag',
-      'hefei_zf_area'
+      'hefei_zf_area',
    ],
   });
   for (const item of schemas.value) {
