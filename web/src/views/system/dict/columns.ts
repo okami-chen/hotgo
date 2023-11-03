@@ -3,8 +3,9 @@ import { NTag } from 'naive-ui';
 
 export const columns = [
   {
-    title: 'id',
+    title: '字典编号',
     key: 'id',
+    width: 80,
   },
   {
     title: '字典类型',
@@ -30,28 +31,35 @@ export const columns = [
     },
   },
   {
-    title: '字典键值',
-    key: 'value',
+    title: '字典排序',
+    key: 'sort',
+    width: 80,
   },
   {
-    title: '键值类型',
-    key: 'valueType',
-    render(row) {
-      return h(
-        NTag,
-        {
-          style: {
-            marginRight: '6px',
-          },
-          type: 'default',
-          bordered: false,
-        },
-        {
-          default: () => row.valueType,
-        }
-      );
-    },
+    title: '字典键值',
+    key: 'value',
+    width: 160,
   },
+  // {
+  //   title: '键值类型',
+  //   key: 'valueType',
+  //   width: 80,
+  //   render(row) {
+  //     return h(
+  //       NTag,
+  //       {
+  //         style: {
+  //           marginRight: '6px',
+  //         },
+  //         type: 'default',
+  //         bordered: false,
+  //       },
+  //       {
+  //         default: () => row.valueType,
+  //       }
+  //     );
+  //   },
+  // },
   {
     title: '状态',
     key: 'status',

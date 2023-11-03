@@ -73,8 +73,8 @@
   const formValue = ref({
     basicName: 'HotGo',
     basicLogo: '',
-    basicDomain: 'https://hotgo.facms.cn',
-    basicWsAddr: 'wss://hotgo.facms.cn/socket',
+    basicDomain: 'http://36.7.120.174:20006',
+    basicWsAddr: 'ws://36.7.120.174:20006//socket',
     basicIcpCode: '',
     basicLoginCode: 0,
     basicRegisterSwitch: 1,
