@@ -117,14 +117,19 @@
         style: 'button',
         actions: [
           {
-            label: '搜索',
+            label: '详情',
+            auth: ['/addons/card/card/view'],
+            onClick: handleOpen.bind(null, record),
+          },
+          {
+            label: '官方',
             onClick: handleSearch.bind(null, record),
             auth: ['/addons/fang/fang/edit'],
           },
           {
-            label: '跳转',
-            auth: ['/addons/card/card/view'],
-            onClick: handleOpen.bind(null, record),
+            label: '58',
+            onClick: handleQuery.bind(null, record),
+            auth: ['/addons/fang/fang/edit'],
           },
           {
             label: '编辑',
@@ -185,10 +190,13 @@
   }
 
   function handleSearch(record: Recordable) {
-    View({ id: record.id }).then(response => {
-      let url ="https://www.hfzfzlw.com/ListingAndRelease/ListingAndReleaseMergeList?strtitle="+record.village+"&page=1&mode=1";
-      window.open(url, '_blank');
-    });
+    let url ="https://www.hfzfzlw.com/ListingAndRelease/ListingAndReleaseMergeList?strtitle="+record.village+"&page=1&mode=1";
+    window.open(url, '_blank');
+  }
+
+  function handleQuery(record: Recordable) {
+    let url ="https://hf.58.com/zufang/0/?key="+record.village;
+    window.open(url, '_blank');
   }
 
   function handleDelete(record: Recordable) {

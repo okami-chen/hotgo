@@ -123,8 +123,13 @@
             auth: ['/addons/fang/village/edit'],
           },
           {
-            label: '搜索',
+            label: '住房',
             onClick: handleSearch.bind(null, record),
+            auth: ['/addons/fang/village/view'],
+          },
+          {
+            label: '58',
+            onClick: handleQuery.bind(null, record),
             auth: ['/addons/fang/village/view'],
           },
           {
@@ -176,6 +181,11 @@
 
   function handleSearch(record: Recordable) {
     let url ="https://www.hfzfzlw.com/ListingAndRelease/ListingAndReleaseMergeList?strtitle="+record.name+"&page=1&mode=1";
+    window.open(url, '_blank');
+  }
+
+  function handleQuery(record: Recordable) {
+    let url ="https://hf.58.com/zufang/0/?key="+record.name;
     window.open(url, '_blank');
   }
 
