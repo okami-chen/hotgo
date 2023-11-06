@@ -128,7 +128,7 @@
             auth: ['/addons/fang/village/view'],
           },
           {
-            label: '贝壳',
+            label: '链家',
             onClick: handleZufang.bind(null, record),
             auth: ['/addons/fang/village/view'],
           },
@@ -195,7 +195,7 @@
   }
 
   function handleZufang(record: Recordable) {
-    let url ="https://hf.zu.ke.com/zufang/rco11rs"+record.name+"/";
+    let url ="https://hf.lianjia.com/zufang/rco11rs"+record.name+"/";
     window.open(url, '_blank');
   }
 
