@@ -108,7 +108,7 @@
   const formParams = ref<State>();
 
   const actionColumn = reactive({
-    width: 300,
+    width: 330,
     title: '操作',
     key: 'action',
     // fixed: 'right',
