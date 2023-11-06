@@ -11,7 +11,6 @@ import (
 	"hotgo/addons/fang/model/entity"
 	"hotgo/internal/model/input/form"
 
-	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
 )
 
@@ -34,12 +33,12 @@ type VillageEditInp struct {
 
 func (in *VillageEditInp) Filter(ctx context.Context) (err error) {
 	// 验证名称
-	if err := g.Validator().Rules("required").Data(in.Name).Messages("名称不能为空").Run(ctx); err != nil {
-		return err.Current()
-	}
-	if err := g.Validator().Rules("in:华安家园,美晨雅阁,金宏豪庭,元一名城A区,元一名城B区,元一名城C区,上城国际丁香苑,上城国际玫瑰苑,金域蓝湾,都市清华,荷塘月色,北美印象雅苑,金都华庭二期,金都华庭三期,金都华庭五期").Data(in.Name).Messages("名称值不正确").Run(ctx); err != nil {
-		return err.Current()
-	}
+	//if err := g.Validator().Rules("required").Data(in.Name).Messages("名称不能为空").Run(ctx); err != nil {
+	//	return err.Current()
+	//}
+	//if err := g.Validator().Rules("in:华安家园,美晨雅阁,金宏豪庭,元一名城A区,元一名城B区,元一名城C区,上城国际丁香苑,上城国际玫瑰苑,金域蓝湾,都市清华,荷塘月色,北美印象雅苑,金都华庭二期,金都华庭三期,金都华庭五期").Data(in.Name).Messages("名称值不正确").Run(ctx); err != nil {
+	//	return err.Current()
+	//}
 
 	return
 }
