@@ -32,6 +32,7 @@ type FangUpdateFields struct {
 	CheckIn     string `json:"checkIn"     dc:"入住"`
 	Flag        int    `json:"flag"        dc:"旗帜"`
 	Url         string `json:"url"         dc:"网址"`
+	Remark      string `json:"remark"      dc:"备注"`
 }
 
 // FangInsertFields 新增租房字段过滤
