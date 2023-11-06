@@ -93,10 +93,6 @@ export const columns = [
     },
   },
   {
-    title: '数据_1',
-    key: 'data_1',
-  },
-  {
     title: '创建时间',
     key: 'created_at',
   },
