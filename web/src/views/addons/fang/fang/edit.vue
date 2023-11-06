@@ -38,6 +38,10 @@
             <n-input-number placeholder="请输入价格" v-model:value="params.price" disabled/>
           </n-form-item>
 
+          <n-form-item label="备注" path="remark">
+            <n-input placeholder="请输入备注" v-model:value="params.remark" />
+          </n-form-item>
+
 <!--          <n-form-item label="户型" path="houseType">-->
 <!--          <n-input placeholder="请输入户型" v-model:value="params.houseType" disabled/>-->
 <!--          </n-form-item>-->
