@@ -26,6 +26,7 @@ type Fang struct {
 	CheckIn     string      `json:"check_in"    description:"入住"`
 	Flag        uint        `json:"flag"        description:"旗帜"`
 	Url         string      `json:"url"         description:"网址"`
+	Remark      string      `json:"remark"      description:"备注"`
 	CreatedAt   *gtime.Time `json:"created_at"  description:"创建时间"`
 	UpdatedAt   *gtime.Time `json:"updated_at"  description:"更新时间"`
 	DeletedAt   *gtime.Time `json:"deleted_at"  description:"删除时间"`

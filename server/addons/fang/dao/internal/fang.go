@@ -36,6 +36,7 @@ type FangColumns struct {
 	CheckIn     string // 入住
 	Flag        string // 旗帜
 	Url         string // 网址
+	Remark      string // 备注
 	CreatedAt   string // 创建时间
 	UpdatedAt   string // 更新时间
 	DeletedAt   string // 删除时间
@@ -59,6 +60,7 @@ var fangColumns = FangColumns{
 	CheckIn:     "check_in",
 	Flag:        "flag",
 	Url:         "url",
+	Remark:      "remark",
 	CreatedAt:   "created_at",
 	UpdatedAt:   "updated_at",
 	DeletedAt:   "deleted_at",
