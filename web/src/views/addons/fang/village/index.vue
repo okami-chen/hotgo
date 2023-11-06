@@ -128,6 +128,11 @@
             auth: ['/addons/fang/village/view'],
           },
           {
+            label: '贝壳',
+            onClick: handleZufang.bind(null, record),
+            auth: ['/addons/fang/village/view'],
+          },
+          {
             label: '58',
             onClick: handleQuery.bind(null, record),
             auth: ['/addons/fang/village/view'],
@@ -186,6 +191,11 @@
 
   function handleQuery(record: Recordable) {
     let url ="https://hf.58.com/zufang/0/?key="+record.name;
+    window.open(url, '_blank');
+  }
+
+  function handleZufang(record: Recordable) {
+    let url ="https://hf.zu.ke.com/zufang/rco11rs"+record.name+"/";
     window.open(url, '_blank');
   }
 
