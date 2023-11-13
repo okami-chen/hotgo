@@ -23,7 +23,7 @@ func newControllerGenerator() *controllerGenerator {
 	return &controllerGenerator{}
 }
 
-func (c *controllerGenerator) Generate(dstModuleFolderPath string, apiModuleApiItems []apiItem) (err error) {
+func (c *controllerGenerator) Generate(dstModuleFolderPath string, apiModuleApiItems []apiItem, merge bool) (err error) {
 	var (
 		doneApiItemSet = gset.NewStrSet()
 	)
@@ -32,14 +32,17 @@ func (c *controllerGenerator) Generate(dstModuleFolderPath string, apiModuleApiI
 			continue
 		}
 		// retrieve all api items of the same module.
-		subItems := c.getSubItemsByModuleAndVersion(apiModuleApiItems, item.Module, item.Version)
+		var (
+			subItems   = c.getSubItemsByModuleAndVersion(apiModuleApiItems, item.Module, item.Version)
+			importPath = gstr.Replace(gfile.Dir(item.Import), "\\", "/", -1)
+		)
 		if err = c.doGenerateCtrlNewByModuleAndVersion(
-			dstModuleFolderPath, item.Module, item.Version, gfile.Dir(item.Import),
+			dstModuleFolderPath, item.Module, item.Version, importPath,
 		); err != nil {
 			return
 		}
 		for _, subItem := range subItems {
-			if err = c.doGenerateCtrlItem(dstModuleFolderPath, subItem); err != nil {
+			if err = c.doGenerateCtrlItem(dstModuleFolderPath, subItem, merge); err != nil {
 				return
 			}
 			doneApiItemSet.Add(subItem.String())
@@ -69,8 +72,6 @@ func (c *controllerGenerator) doGenerateCtrlNewByModuleAndVersion(
 		newFuncNameDefinition = fmt.Sprintf(`func %s()`, newFuncName)
 		alreadyCreated        bool
 	)
-	// replace "\" to "/", fix import error
-	importPath = gstr.Replace(importPath, "\\", "/", -1)
 	if !gfile.Exists(moduleFilePath) {
 		content := gstr.ReplaceByMap(consts.TemplateGenCtrlControllerEmpty, g.MapStrStr{
 			"{Module}": module,
@@ -114,7 +115,7 @@ func (c *controllerGenerator) doGenerateCtrlNewByModuleAndVersion(
 	return
 }
 
-func (c *controllerGenerator) doGenerateCtrlItem(dstModuleFolderPath string, item apiItem) (err error) {
+func (c *controllerGenerator) doGenerateCtrlItem(dstModuleFolderPath string, item apiItem, merge bool) (err error) {
 	var (
 		methodNameSnake = gstr.CaseSnake(item.MethodName)
 		ctrlName        = fmt.Sprintf(`Controller%s`, gstr.UcFirst(item.Version))
@@ -122,15 +123,40 @@ func (c *controllerGenerator) doGenerateCtrlItem(dstModuleFolderPath string, ite
 			`%s_%s_%s.go`, item.Module, item.Version, methodNameSnake,
 		))
 	)
-	content := gstr.ReplaceByMap(consts.TemplateGenCtrlControllerMethodFunc, g.MapStrStr{
-		"{Module}":     item.Module,
-		"{ImportPath}": item.Import,
-		"{CtrlName}":   ctrlName,
-		"{Version}":    item.Version,
-		"{MethodName}": item.MethodName,
-	})
-	if err = gfile.PutContents(methodFilePath, gstr.TrimLeft(content)); err != nil {
-		return err
+	var content string
+
+	if merge {
+		methodFilePath = gfile.Join(dstModuleFolderPath, fmt.Sprintf(
+			`%s_%s_%s.go`, item.Module, item.Version, item.FileName,
+		))
+
+	}
+
+	if gfile.Exists(methodFilePath) {
+		content = gstr.ReplaceByMap(consts.TemplateGenCtrlControllerMethodFuncMerge, g.MapStrStr{
+			"{Module}":     item.Module,
+			"{CtrlName}":   ctrlName,
+			"{Version}":    item.Version,
+			"{MethodName}": item.MethodName,
+		})
+
+		if gstr.Contains(gfile.GetContents(methodFilePath), fmt.Sprintf(`func (c *%v) %v`, ctrlName, item.MethodName)) {
+			return
+		}
+		if err = gfile.PutContentsAppend(methodFilePath, gstr.TrimLeft(content)); err != nil {
+			return err
+		}
+	} else {
+		content = gstr.ReplaceByMap(consts.TemplateGenCtrlControllerMethodFunc, g.MapStrStr{
+			"{Module}":     item.Module,
+			"{ImportPath}": item.Import,
+			"{CtrlName}":   ctrlName,
+			"{Version}":    item.Version,
+			"{MethodName}": item.MethodName,
+		})
+		if err = gfile.PutContents(methodFilePath, gstr.TrimLeft(content)); err != nil {
+			return err
+		}
 	}
 	mlog.Printf(`generated: %s`, methodFilePath)
 	return
