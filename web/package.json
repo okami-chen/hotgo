@@ -39,6 +39,7 @@
     "highlight.js": "^11.8.0",
     "lodash-es": "^4.17.21",
     "naive-ui": "^2.34.3",
+    "node-fetch": "^3.3.2",
     "pinia": "^2.0.14",
     "qrcode.vue": "3.3.3",
     "qs": "^6.10.3",
