@@ -12,7 +12,6 @@ import (
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/util/gmeta"
 	"hotgo/internal/consts"
-	"hotgo/internal/library/contexts"
 	"hotgo/internal/library/response"
 	"hotgo/utility/charset"
 	"hotgo/utility/simple"
@@ -22,9 +21,19 @@ import (
 func (s *sMiddleware) ResponseHandler(r *ghttp.Request) {
 	r.Middleware.Next()
 
+	// 错误状态码接管
+	switch r.Response.Status {
+	case 403:
+		r.Response.Writeln("403 - 网站拒绝显示此网页")
+		return
+	case 404:
+		r.Response.Writeln("404 - 你似乎来到了没有知识存在的荒原…")
+		return
+	}
+
 	contentType := getContentType(r)
 	// 已存在响应
-	if contentType != consts.HTTPContentTypeStream && r.Response.BufferLength() > 0 && contexts.Get(r.Context()).Response != nil {
+	if contentType != consts.HTTPContentTypeStream && r.Response.BufferLength() > 0 { // && contexts.Get(r.Context()).Response != nil
 		return
 	}
 
@@ -87,8 +96,10 @@ func parseResponse(r *ghttp.Request) (code int, message string, resp interface{}
 	code = gerror.Code(err).Code()
 
 	// 记录异常日志
+	// 如果你想对错误做不同的处理，可以通过定义不同的错误码来区分
+	// 默认-1为安全可控错误码只记录文件日志，非-1为不可控错误，记录文件日志+服务日志并打印堆栈
 	if code == gcode.CodeNil.Code() {
-		g.Log().Stdout(false).Printf(ctx, "exception:%v", err)
+		g.Log().Stdout(false).Infof(ctx, "exception:%v", err)
 	} else {
 		g.Log().Errorf(ctx, "exception:%v", err)
 	}

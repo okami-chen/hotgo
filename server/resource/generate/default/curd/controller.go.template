@@ -11,6 +11,7 @@ import (
 	"context"
 	"@{.importApi}"
 	"hotgo/internal/model/input/form"
+	"hotgo/internal/model/input/@{.templateGroup}in"
 	"@{.importService}"
 	"hotgo/utility/validate"
 )
@@ -27,6 +28,10 @@ func (c *c@{.varName}) List(ctx context.Context, req *@{.varName | ToLower}.List
 	if err != nil {
 		return
 	}
+	
+	if list == nil {
+		list = []*@{.templateGroup}in.@{.varName}ListModel{}
+    }
 
 	res = new(@{.varName | ToLower}.ListRes)
 	res.List = list

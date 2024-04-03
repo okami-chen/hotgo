@@ -8,9 +8,11 @@ package views
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
+	"hotgo/internal/library/dict"
 	"hotgo/internal/model/input/sysin"
 	"hotgo/utility/convert"
 )
@@ -22,7 +24,6 @@ const (
 func (l *gCurd) webModelTplData(ctx context.Context, in *CurdPreviewInput) (data g.Map, err error) {
 	data = make(g.Map)
 	data["state"] = l.generateWebModelState(ctx, in)
-	data["defaultState"] = l.generateWebModelDefaultState(ctx, in)
 	data["rules"] = l.generateWebModelRules(ctx, in)
 	data["formSchema"] = l.generateWebModelFormSchema(ctx, in)
 	if data["columns"], err = l.generateWebModelColumns(ctx, in); err != nil {
@@ -33,18 +34,7 @@ func (l *gCurd) webModelTplData(ctx context.Context, in *CurdPreviewInput) (data
 
 func (l *gCurd) generateWebModelState(ctx context.Context, in *CurdPreviewInput) string {
 	buffer := bytes.NewBuffer(nil)
-	buffer.WriteString("export interface State {\n")
-	for _, field := range in.masterFields {
-		buffer.WriteString(fmt.Sprintf("  %s: %s;\n", field.TsName, field.TsType))
-	}
-	buffer.WriteString("}")
-
-	return buffer.String()
-}
-
-func (l *gCurd) generateWebModelDefaultState(ctx context.Context, in *CurdPreviewInput) string {
-	buffer := bytes.NewBuffer(nil)
-	buffer.WriteString("export const defaultState: State = {\n")
+	buffer.WriteString("export class State {\n")
 	for _, field := range in.masterFields {
 		var value = field.DefaultValue
 		if value == nil {
@@ -56,10 +46,16 @@ func (l *gCurd) generateWebModelDefaultState(ctx context.Context, in *CurdPrevie
 		if field.Name == "status" {
 			value = 1
 		}
-		buffer.WriteString(fmt.Sprintf("  %s: %v,\n", field.TsName, value))
+		if field.FormMode == "Switch" {
+			value = 2
+		}
+		if field.FormMode == "InputDynamic" {
+			value = "[]"
+		}
+		buffer.WriteString(fmt.Sprintf("  public %s = %v; // %s\n", field.TsName, value, field.Dc))
 	}
-	buffer.WriteString("};")
-
+	buffer.WriteString("\n  constructor(state?: Partial<State>) {\n    if (state) {\n      Object.assign(this, state);\n    }\n  }")
+	buffer.WriteString("}")
 	return buffer.String()
 }
 
@@ -70,34 +66,64 @@ func (l *gCurd) generateWebModelDictOptions(ctx context.Context, in *CurdPreview
 	}
 
 	var (
-		options      = make(g.Map)
-		dictTypeIds  []int64
-		dictTypeList []*DictType
+		options             = make(g.Map)
+		dictTypeIds         []int64
+		dictTypeList        []*DictType
+		builtinDictTypeIds  []int64
+		builtinDictTypeList []*DictType
 	)
 
 	for _, field := range in.masterFields {
 		if field.DictType > 0 {
 			dictTypeIds = append(dictTypeIds, field.DictType)
 		}
+
+		if field.DictType < 0 {
+			builtinDictTypeIds = append(builtinDictTypeIds, field.DictType)
+		}
 	}
 
 	dictTypeIds = convert.UniqueSlice(dictTypeIds)
-	if len(dictTypeIds) == 0 {
+	builtinDictTypeIds = convert.UniqueSlice(builtinDictTypeIds)
+
+	if len(dictTypeIds) == 0 && len(builtinDictTypeIds) == 0 {
 		options["has"] = false
 		return options, nil
 	}
 
-	err := g.Model("sys_dict_type").Ctx(ctx).
-		Fields("id", "type").
-		WhereIn("id", dictTypeIds).
-		Scan(&dictTypeList)
-	if err != nil {
-		return nil, err
+	if len(dictTypeIds) > 0 {
+		err := g.Model("sys_dict_type").Ctx(ctx).
+			Fields("id", "type").
+			WhereIn("id", dictTypeIds).
+			Scan(&dictTypeList)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	if len(dictTypeList) == 0 {
+	if len(builtinDictTypeIds) > 0 {
+		for _, id := range builtinDictTypeIds {
+			opts, err := dict.GetOptionsById(ctx, id)
+			if err != nil && !errors.Is(err, dict.NotExistKeyError) {
+				return nil, err
+			}
+
+			if len(opts) > 0 {
+				row := new(DictType)
+				row.Id = id
+				row.Type = opts[0].Type
+				builtinDictTypeList = append(builtinDictTypeList, row)
+			}
+		}
+	}
+
+	if len(dictTypeList) == 0 && len(builtinDictTypeList) == 0 {
 		options["has"] = false
 		return options, nil
+	}
+
+	if len(builtinDictTypeList) > 0 {
+		dictTypeList = append(dictTypeList, builtinDictTypeList...)
 	}
 
 	options["has"] = true
@@ -107,30 +133,34 @@ func (l *gCurd) generateWebModelDictOptions(ctx context.Context, in *CurdPreview
 		switchLoadOptions string
 	)
 
+	interfaceOptionsBuffer := bytes.NewBuffer(nil)
+	interfaceOptionsBuffer.WriteString("export interface IOptions extends Options {\n")
 	constOptionsBuffer := bytes.NewBuffer(nil)
-	constOptionsBuffer.WriteString("export const options = ref<Options>({\n")
+	constOptionsBuffer.WriteString("export const options = ref<IOptions>({\n")
 
 	for _, v := range dictTypeList {
 		// 字段映射字典
 		for _, field := range in.masterFields {
-			if field.DictType > 0 && v.Id == field.DictType {
+			if field.DictType != 0 && v.Id == field.DictType {
 				in.options.dictMap[field.TsName] = v.Type
 				switchLoadOptions = fmt.Sprintf("%s      case '%s':\n        item.componentProps.options = options.value.%s;\n        break;\n", switchLoadOptions, field.TsName, v.Type)
 			}
 		}
 
 		awaitLoadOptions = fmt.Sprintf("%s    '%s',\n", awaitLoadOptions, v.Type)
+		interfaceOptionsBuffer.WriteString("  " + v.Type + ": Option[]; \n")
 		constOptionsBuffer.WriteString("  " + v.Type + ": [],\n")
 	}
 
+	interfaceOptionsBuffer.WriteString("};\n")
 	constOptionsBuffer.WriteString("});\n")
 
 	loadOptionsBuffer := bytes.NewBuffer(nil)
 	loadOptionsBuffer.WriteString(fmt.Sprintf(ModelLoadOptionsTemplate, awaitLoadOptions, switchLoadOptions))
 
+	options["interface"] = interfaceOptionsBuffer.String()
 	options["const"] = constOptionsBuffer.String()
 	options["load"] = loadOptionsBuffer.String()
-
 	return options, nil
 }
 
@@ -295,7 +325,7 @@ func (l *gCurd) generateWebModelColumnsEach(buffer *bytes.Buffer, in *CurdPrevie
 			component = fmt.Sprintf("  {\n    title: '%s',\n    key: '%s',\n    render(row) {\n      if (isNullObject(row.%s)) {\n        return ``;\n      }\n      return row.%s.map((attachfile) => {\n        return h(\n          %s,\n          {\n            size: 'small',\n            style: {\n              'margin-left': '2px',\n            },\n          },\n          {\n            default: () => getFileExt(attachfile),\n          }\n        );\n      });\n    },\n  },\n", field.Dc, field.TsName, field.TsName, field.TsName, "NAvatar")
 
 		case FormModeSwitch:
-			component = fmt.Sprintf("  {\n    title: '%s',\n    key: '%s',\n    width: 100,\n    render(row) {\n      return h(%s, {\n        value: row.%s === 1,\n        checked: '开启',\n        unchecked: '关闭',\n        disabled: !hasPermission(['%s']),\n        onUpdateValue: function (e) {\n          console.log('onUpdateValue e:' + JSON.stringify(e));\n          row.%s = e ? 1 : 2;\n          Switch({ %s: row.%s, key: '%s', value: row.%s }).then((_res) => {\n            $message.success('操作成功');\n          });\n        },\n      });\n    },\n  },\n", field.Dc, field.TsName, "NSwitch", field.TsName, "/"+in.options.ApiPrefix+"/switch", field.TsName, in.pk.TsName, in.pk.TsName, field.TsName, field.TsName)
+			component = fmt.Sprintf("  {\n    title: '%s',\n    key: '%s',\n    width: 100,\n    render(row) {\n      return h(%s, {\n        value: row.%s === 1,\n        checked: '开启',\n        unchecked: '关闭',\n        disabled: !hasPermission(['%s']),\n        onUpdateValue: function (e) {\n          console.log('onUpdateValue e:' + JSON.stringify(e));\n          row.%s = e ? 1 : 2;\n          Switch({ %s: row.%s, key: '%s', value: row.%s }).then((_res) => {\n            $message.success('操作成功');\n          });\n        },\n      });\n    },\n  },\n", field.Dc, field.TsName, "NSwitch", field.TsName, "/"+in.options.ApiPrefix+"/switch", field.TsName, in.pk.TsName, in.pk.TsName, convert.CamelCaseToUnderline(field.TsName), field.TsName)
 
 		case FormModeRate:
 			component = fmt.Sprintf("  {\n    title: '%s',\n    key: '%s',\n    render(row) {\n      return h(%s, {\n        allowHalf: true,\n        readonly: true,\n        defaultValue: row.%s,\n      });\n    },\n  },\n", field.Dc, field.TsName, "NRate", field.TsName)

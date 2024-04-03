@@ -7,6 +7,7 @@ package views
 
 import (
 	"context"
+	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gfile"
@@ -14,8 +15,10 @@ import (
 	"github.com/gogf/gf/v2/os/gview"
 	"github.com/gogf/gf/v2/text/gstr"
 	"hotgo/internal/consts"
+	"hotgo/internal/dao"
 	"hotgo/internal/library/hggen/internal/cmd/gendao"
 	"hotgo/internal/library/hggen/internal/utility/utils"
+	"hotgo/internal/library/hgorm"
 	"hotgo/internal/model"
 	"hotgo/internal/model/input/sysin"
 	"hotgo/utility/convert"
@@ -230,6 +233,18 @@ func (l *gCurd) loadView(ctx context.Context, in *CurdPreviewInput) (err error) 
 func (l *gCurd) DoBuild(ctx context.Context, in *CurdBuildInput) (err error) {
 	preview, err := l.DoPreview(ctx, in.PreviewIn)
 	if err != nil {
+		return
+	}
+
+	db, err := g.DB().Open(ParseDBConfigNodeLink(&gdb.ConfigNode{Link: in.PreviewIn.DaoConfig.Link}))
+	if err != nil {
+		err = gerror.Newf("连接数据库失败，请检查配置文件[server/hack/config.yaml]数据库配置是否正确！err:%v", err.Error())
+		return err
+	}
+
+	defer db.Close()
+	if err = db.Ping(); err != nil {
+		err = gerror.Newf("数据库访问异常，请检查配置文件[server/hack/config.yaml]数据库配置是否正确！err:%v", err.Error())
 		return
 	}
 
@@ -667,6 +682,15 @@ func (l *gCurd) generateSqlContent(ctx context.Context, in *CurdPreviewInput) (e
 		}
 		genFile = new(sysin.GenFile)
 	)
+
+	tplData["dirPid"], tplData["dirLevel"], tplData["dirTree"], err = hgorm.AutoUpdateTree(ctx, &dao.AdminMenu, 0, int64(in.options.Menu.Pid))
+	if err != nil {
+		return err
+	}
+
+	tplData["listLevel"] = tplData["dirLevel"].(int) + 1
+	tplData["btnLevel"] = tplData["dirLevel"].(int) + 2
+	tplData["sortLevel"] = tplData["dirLevel"].(int) + 3
 
 	if in.options.Menu.Pid > 0 {
 		tplData["mainComponent"] = "ParentLayout"

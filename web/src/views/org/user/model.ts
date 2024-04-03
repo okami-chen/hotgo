@@ -6,6 +6,7 @@ import { getPostOption } from '@/api/org/post';
 import { FormSchema, useForm } from '@/components/Form';
 import { statusOptions } from '@/enums/optionsiEnum';
 import { defRangeShortcuts } from '@/utils/dateUtil';
+import {Dicts} from "@/api/dict/dict";
 
 // 增加余额/积分.
 
@@ -138,6 +139,28 @@ const schemas: FormSchema[] = [
     },
   },
   {
+    field: 'id',
+    component: 'NInput',
+    label: '用户ID',
+    componentProps: {
+      placeholder: '请输入用户ID',
+      onInput: (e: any) => {
+        console.log(e);
+      },
+    },
+  },
+  {
+    field: 'pid',
+    component: 'NInput',
+    label: '上级ID',
+    componentProps: {
+      placeholder: '请输入上级用户ID',
+      onInput: (e: any) => {
+        console.log(e);
+      },
+    },
+  },
+  {
     field: 'status',
     component: 'NSelect',
     label: '状态',
@@ -191,14 +214,10 @@ export async function loadOptions() {
     treeDataToCompressed(role.list);
   }
 
-  const post = await getPostOption();
-  if (post.list && post.list.length > 0) {
-    for (let i = 0; i < post.list.length; i++) {
-      post.list[i].label = post.list[i].name;
-      post.list[i].value = post.list[i].id;
-    }
-    options.value.post = post.list;
-  }
+  const tmpOptions = await Dicts({
+    types: ['adminPostOption'],
+  });
+  options.value.post =tmpOptions?.adminPostOption;
 }
 
 function treeDataToCompressed(source) {

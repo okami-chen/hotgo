@@ -9,8 +9,8 @@ import { PageEnum } from '@/enums/pageEnum';
 
 import { useGlobSetting } from '@/hooks/setting';
 
-import { isString } from '@/utils/is/';
-import { deepMerge, isUrl } from '@/utils';
+import { isString, isUrl } from '@/utils/is/';
+import { deepMerge } from '@/utils';
 import { setObjToUrlParams } from '@/utils/urlUtils';
 
 import { CreateAxiosOptions, RequestOptions, Result } from './types';
@@ -241,7 +241,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
   return new VAxios(
     deepMerge(
       {
-        timeout: 10 * 1000,
+        timeout: 30 * 1000,
         authenticationScheme: '',
         // 接口前缀
         prefixUrl: urlPrefix,

@@ -20,7 +20,7 @@
       ref="actionRef"
       :actionColumn="actionColumn"
       @update:checked-row-keys="onCheckedRow"
-      :scroll-x="1800"
+      :scroll-x="1280"
     >
       <template #tableTitle>
         <n-button
@@ -69,6 +69,7 @@
 
     <n-modal
       v-model:show="showModal"
+      :mask-closable="false"
       :show-icon="false"
       preset="dialog"
       :title="formParams?.id > 0 ? '编辑用户 #' + formParams?.id : '添加用户'"
@@ -287,7 +288,7 @@
   });
 
   const actionColumn = reactive({
-    width: 220,
+    width: 240,
     title: '操作',
     key: 'action',
     fixed: 'right',

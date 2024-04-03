@@ -1,7 +1,12 @@
+// Package middleware
+// @Link  https://github.com/bufanyun/hotgo
+// @Copyright  Copyright (c) 2023 HotGo CLI
+// @Author  Ms <133814250@qq.com>
+// @License  https://github.com/bufanyun/hotgo/blob/master/LICENSE
 package middleware
 
 import (
-	"github.com/gogf/gf/v2/errors/gcode"
+	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/util/gconv"
 	"hotgo/internal/library/response"
@@ -36,9 +41,19 @@ func (s *sMiddleware) GetFilterRoutes(r *ghttp.Request) map[string]ghttp.RouterI
 	return s.FilterRoutes
 }
 
-// GenFilterRouteKey 生成路由唯一key
-func (s *sMiddleware) GenFilterRouteKey(router *ghttp.Router) string {
-	return router.Method + " " + router.Uri
+// GenFilterRequestKey 根据请求生成唯一key
+func (s *sMiddleware) GenFilterRequestKey(r *ghttp.Request) string {
+	return s.GenRouteKey(r.Method, r.Request.URL.Path)
+}
+
+// GenFilterRouteKey 根据路由生成唯一key
+func (s *sMiddleware) GenFilterRouteKey(r *ghttp.Router) string {
+	return s.GenRouteKey(r.Method, r.Uri)
+}
+
+// GenRouteKey 生成唯一key
+func (s *sMiddleware) GenRouteKey(method, path string) string {
+	return method + " " + path
 }
 
 // PreFilter 请求输入预处理
@@ -68,7 +83,8 @@ func (s *sMiddleware) PreFilter(r *ghttp.Request) {
 
 	// 先验证基本校验规则
 	if err := r.Parse(inputObject.Interface()); err != nil {
-		response.JsonExit(r, gcode.CodeInvalidRequest.Code(), err.Error())
+		resp := gerror.Code(err)
+		response.JsonExit(r, resp.Code(), gerror.Current(err).Error(), resp.Detail())
 		return
 	}
 
@@ -80,7 +96,8 @@ func (s *sMiddleware) PreFilter(r *ghttp.Request) {
 
 	// 执行预处理
 	if err := validate.PreFilter(r.Context(), inputObject.Interface()); err != nil {
-		response.JsonExit(r, gcode.CodeInvalidParameter.Code(), err.Error())
+		resp := gerror.Code(err)
+		response.JsonExit(r, resp.Code(), gerror.Current(err).Error(), resp.Detail())
 		return
 	}
 

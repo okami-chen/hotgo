@@ -10,7 +10,7 @@
 
 1. 前往https://nodejs.org/zh-cn/下载当前版本node
 2. 命令行运行 `node -v` 若控制台输出版本号则node安装成功
-3. node 版本需大于 `16.0`
+3. node 版本需大于等于 `16.0`
 4. 安装yarn：`npm install -g yarn`
 5. 命令行运行 `yarn -v` 若控制台输出版本号则前端环境搭建成功
 
@@ -26,6 +26,6 @@
 > 需要本地具有 git node golang 环境
 
 - node版本 >= 16.0.0
-- golang版本 >= v1.19
-- mysql 引擎需要是 innoDB
+- golang版本 >= 1.19
+- mysql版本 >= 5.7，引擎需要是 innoDB
 - IDE推荐：Goland
